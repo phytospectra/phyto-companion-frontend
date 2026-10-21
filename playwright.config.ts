@@ -1,8 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
+
 /**
  * E2E configuration. Runs against the dev server with the MSW mock backend
  * enabled, so no external services are required.
+ *
+ * Set PLAYWRIGHT_BASE_URL to test an already-running server; otherwise the
+ * config starts `npm run dev` itself.
  */
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -12,7 +17,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "list",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: BASE_URL,
     trace: "on-first-retry",
   },
   projects: [
@@ -23,7 +28,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run dev",
-    url: "http://localhost:3000",
+    url: BASE_URL,
     reuseExistingServer: true,
     timeout: 120_000,
     env: {

@@ -1,137 +1,160 @@
-Phytospectra Frontend — README
-==============================
+Phytospectra Frontend
+=====================
 
-This is the **Phytospectra frontend**: an honesty-first UI for an AI-native
-natural product drug discovery platform. Every claim carries a verdict badge
-(color + text + tooltip — never color alone); every candidate is one click
-from its evidence graph; every mechanism hypothesis carries its disclaimer
-at the top of the panel, never buried in a footer.
+An honesty-first UI for an AI-native natural product drug discovery
+platform. Every claim carries a verdict badge (color + text + tooltip —
+never color alone); every candidate is one click from its evidence graph;
+every mechanism hypothesis carries its disclaimer at the top of the panel,
+never buried in a footer.
 
-> **What this package is.** A Next.js 16 (App Router) implementation of the
-> honesty-first UI patterns specified in the platform's frontend contract.
-> It runs against an in-memory mock API (`src/lib/phyto/mock-api.ts`) that
-> throws the same `InsufficientTokensError` class the real axios
-> interceptor would throw on a 402. **Swapping the mock for the real
-> `https://api.phytospectra.com` is a mechanical change** — the component
-> contracts (props in / props out) are identical.
-
-> **What this package is NOT.** It is not the spec's literal Vite + React
-> 18 standalone repo. The spec called for Vite + React 18 + Firebase Auth
-> + MSW + Cytoscape + Plotly + Vitest + Playwright + Firebase Hosting. The
-> sandbox this code was authored in runs Next.js 16 with React 19, so the
-> implementation is on Next.js. The component / data-contract / state-store
-> / honesty-pattern layer is portable to the spec's Vite target with
-> minimal changes (mostly file-system layout and a handful of `next/*`
-> imports replaced with `react-router` equivalents).
+The app is **Next.js 16 (App Router) + React 19 + TypeScript**, styled with
+Tailwind CSS v4 and shadcn/ui. It runs fully offline against an in-browser
+MSW mock backend, and switches to the real API by changing environment
+variables — no code changes.
 
 ---
 
 ## Quick start
 
 ```bash
-# from the repo root
-npm install        # or: bun install / pnpm install
-npm run dev        # starts on http://localhost:3000
+npm install --legacy-peer-deps   # React 19 peers still settle with legacy resolution
+cp .env.example .env.local
+npm run dev                      # http://localhost:3000
 ```
 
-The demo starts **signed in** as `Dr. M. Rivera` with 50 free tokens so you
-can immediately exercise every page. No Firebase, no Stripe, no real
-backend required — the mock API handles everything.
+With `NEXT_PUBLIC_USE_MOCKS=true` (the default in `.env.example`) the demo
+starts **signed in** as `Dr. M. Rivera` with 50 free tokens, so every page is
+immediately reachable. No Firebase project, Stripe account, or backend is
+required.
 
-## Available scripts
+To run against a real backend instead, set `NEXT_PUBLIC_USE_MOCKS=false`,
+fill in the Firebase keys, and point `NEXT_PUBLIC_API_BASE_URL` at the
+orchestrator. The login page then performs real Firebase sign-in.
 
-| Script            | Description                                        |
-| ----------------- | -------------------------------------------------- |
-| `npm run dev`     | Start the dev server (port 3000)                   |
-| `npm run build`   | Production build                                    |
-| `npm run start`   | Start the production server                         |
-| `npm run lint`    | ESLint check                                        |
+## Scripts
+
+| Script                    | What it does                                            |
+| ------------------------- | ------------------------------------------------------- |
+| `npm run dev`             | Dev server on port 3000 (Turbopack)                     |
+| `npm run build`           | Production build (standalone output)                    |
+| `npm run start`           | Serve the production build                              |
+| `npm run lint`            | ESLint                                                  |
+| `npm run test:unit`       | Vitest unit suite (12 tests)                            |
+| `npm run test:unit:watch` | Vitest in watch mode                                    |
+| `npm run test:e2e`        | Playwright E2E suite (2 specs, chromium)                |
+
+The E2E suite starts its own dev server with mocks enabled, so it needs no
+external services. Install the browser once with
+`npx playwright install chromium`.
+
+## Routes
+
+File-based App Router routes under `src/app/`:
+
+| Route                 | Screen                                                     |
+| --------------------- | ---------------------------------------------------------- |
+| `/`                   | Redirects to `/upload` (or `/login` when unauthenticated)   |
+| `/upload`             | Drop spectra, describe the sample, pick a workflow          |
+| `/analysis/[run_id]`  | Task graph, token meter, human checkpoint, audit tail       |
+| `/network`            | MS2 / HSQC / fused / bioactivity network views              |
+| `/elucidation`        | Ranked candidates, novelty, site localisation               |
+| `/pharmacology`       | Target interactions and mechanism hypothesis                |
+| `/results/[run_id]`   | Assembled report                                            |
+| `/billing`            | Token packs, transactions, 402 demo                         |
+| `/settings`           | LLM provider and model version                              |
+| `/login`              | Firebase sign-in (Google + email/password)                  |
+
+`not-found.tsx`, `error.tsx`, and a reusable `ErrorBoundary` provide the
+failure surfaces; `/api` is a health route used by smoke checks.
 
 ## Architecture
 
-The frontend is organised in five layers, each of which is a drop-in
-swap away from the production spec:
+1. **Backend contract** — `src/api/types.ts` mirrors the orchestrator's
+   response shapes verbatim (`CandidateRank`, `RunState`,
+   `MechanismHypothesis`, `SiteLocalization`, `EvidenceGraph`,
+   `TokenBalance`, …). This is the single source of truth for data shapes.
 
-1. **Data layer** — `src/lib/phyto/{types,fixtures,constants,formatting}.ts`
-   TypeScript interfaces mirror the backend API contract verbatim
-   (`CandidateRank`, `RunState`, `MechanismHypothesis`, `SiteLocalization`,
-   `EvidenceGraph`, `TokenBalance`, etc.). Swap `fixtures.ts` for TanStack
-   Query hooks hitting `https://api.phytospectra.com`.
+2. **API client** — `src/api/client.ts` is a typed `fetch` wrapper. Every
+   non-2xx response becomes a typed error (`UnauthorizedError`,
+   `InsufficientTokensError`, `ValidationError`, `ServerError`,
+   `ServiceUnavailableError`, `NetworkError`), so nothing is silently
+   swallowed. It attaches the bearer token from `setToken()`,
+   generates/forwards `Idempotency-Key`, and honours `AbortSignal`.
+   FastAPI validation payloads are parsed into per-field messages.
 
-2. **State layer** — `src/lib/phyto/{stores,mock-api}.ts`
-   Zustand stores hold the in-memory auth user + token balance
-   (`useAuthStore`, `useTokenStore`). The mock API throws
-   `InsufficientTokensError` on a simulated 402 — exactly what the real
-   axios interceptor would do. Idempotency keys are deduped per key.
+3. **Mock backend** — `src/mocks/` holds MSW handlers typed against the
+   contract, plus browser and Node workers. `src/instrumentation-client.ts`
+   starts the browser worker in development; it is a client-only entry
+   point because MSW's `msw/browser` export is `null` under the Node
+   condition and must stay out of the server bundle. The Node worker is
+   used by unit tests.
 
-3. **Common leaf components** — `src/components/phyto/common/`
-   `VerdictBadge`, `UncertaintyBadge`, `DisclaimerBanner`, `CostBadge`,
-   `InsufficientTokensModal`, `LoadingSpinner`, `EmptyState`. These are
-   the platform's honesty primitives.
+4. **Auth** — `src/auth/` contains the Firebase module, `AuthProvider`
+   (subscribes to `onAuthStateChanged`, pushes the ID token into the API
+   client, never persists it to storage), `LoginPage`, and `ProtectedRoute`.
+   When mocks are on, auth short-circuits to a fixed demo user.
 
-4. **Specialist pages** — `src/components/phyto/{upload,analysis,network,
-   elucidation,mechanism,billing,ResultsPage,SettingsPage}.tsx`. Each
-   consumes only the data layer + stores + common components.
+5. **State** — `src/lib/phyto/stores.ts` holds Zustand stores for the auth
+   user and token balance (`useAuthStore`, `useTokenStore`), including the
+   402 error state and queued retry operation.
 
-5. **Layout** — `src/components/phyto/layout/AppShell.tsx`. Sticky header
-   with balance badge + theme toggle + user menu, sidebar nav, sticky
-   footer.
+6. **UI** — `src/components/phyto/` is split into `common/` (honesty
+   primitives: `VerdictBadge`, `UncertaintyBadge`, `DisclaimerBanner`,
+   `CostBadge`, `InsufficientTokensModal`), `layout/` (`AppShell`,
+   `AppFrame`, `PageHeader`), and one directory per feature page.
 
-See `ARCHITECTURE.md` (in the source repo, not this package) for the full
-diagrams of the token flow, the error-handling strategy, and the testing
-strategy.
+## Testing
 
-## Honesty contract (acceptance criteria)
+- **Unit** (`tests/unit/`, Vitest + Testing Library, jsdom): API client
+  error mapping and token handling, `VerdictBadge` accessibility contract,
+  `CostBadge` arithmetic, `LoginPage` sign-in flow, and the 402 modal.
+- **E2E** (`tests/e2e/`, Playwright): the upload → analysis-checkpoint happy
+  path, and billing 402 → modal → billing navigation.
 
-These are demonstrated end-to-end in the demo:
+## Environment variables
 
-- ✅ Every verdict badge has **color + text + tooltip**.
-- ✅ Every candidate shows its **ranking interval** (ties are first-class).
-  "Ranks 2–3 (tied)" not "Rank 2".
-- ✅ Every candidate, network node, and mechanism claim has an
-  **Evidence button** opening a slide-over with: evidence graph,
-  supporting features, unmatched observed peaks, unmatched predicted
-  peaks, cross-modal propagation, and citations.
-- ✅ Every mechanism hypothesis carries its disclaimer at the
-  **top of the panel** (role="note", uppercase).
-- ✅ Every checkpoint requires a **typed reason (min 10 chars)** for
-  **both Approve and Reject**. Both buttons disabled until satisfied.
-- ✅ Every metered button shows a **CostBadge** with the token cost +
-  current balance + post-op balance before the user clicks.
-- ✅ A 402 response opens a modal showing balance / required / difference
-  and an auto-retry banner. After top-up, the failed operation retries
-  automatically.
+See `.env.example` for the full annotated list. In short:
+
+| Variable                             | Purpose                                        |
+| ------------------------------------ | ---------------------------------------------- |
+| `NEXT_PUBLIC_USE_MOCKS`              | `true` serves everything from MSW              |
+| `NEXT_PUBLIC_API_BASE_URL`           | Orchestrator base URL (real mode)              |
+| `NEXT_PUBLIC_FIREBASE_*`             | Firebase web app config (real mode)            |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Publishable key only; secrets stay server-side |
+
+Nothing in `NEXT_PUBLIC_*` is secret. Firebase ID tokens are held in memory
+by `AuthProvider` and never written to `localStorage`.
+
+## Honesty contract
+
+Demonstrated end-to-end in the demo:
+
+- Verdict badges always carry color + text + tooltip, and meet WCAG 1.4.1.
+- Candidate ranks are intervals; ties are first-class ("Ranks 2–3 (tied)").
+- Candidates, network nodes, and mechanism claims each have an Evidence
+  control opening the graph, matched/unmatched peaks, and citations.
+- Mechanism hypotheses carry their disclaimer at the top of the panel.
+- Checkpoints require a typed reason (min 10 chars) for both approve and
+  reject; both buttons stay disabled until it is satisfied.
+- Metered actions show cost, current balance, and post-operation balance
+  before the click.
+- A 402 opens a modal stating balance, required, and shortfall, with an
+  automatic retry queued for after top-up.
 
 ## Deploying
 
-This package is a Next.js 16 app, deployable to Vercel, Firebase Hosting,
-or any Node.js host:
+The build uses `output: "standalone"`.
 
 ```bash
 npm run build
 npm run start
 ```
 
-For Firebase Hosting specifically, add a `firebase.json`:
-
-```json
-{
-  "hosting": {
-    "site": "phytospectra-app",
-    "public": "dist",
-    "rewrites": [{ "source": "**", "destination": "/index.html" }]
-  }
-}
-```
-
-Then `firebase deploy --only hosting --project phyto-companion-prod`.
+Any Node host (or a container built from `.next/standalone`) works. For
+Firebase Hosting, configure a rewrite of `**` to the server function rather
+than the SPA fallback used by a static export, since routes are
+server-rendered.
 
 ## License
 
-AGPL-3.0 — matches the backend. See `LICENSE`.
-
-## Acknowledgements
-
-Built as a Phase 1 demo of the honesty-first patterns specified by the
-Phytospectra platform contract. The full backend API contract lives at
-`https://github.com/phytospectra/phyto-companion` (separate repo).
+AGPL-3.0. See `LICENSE`.
