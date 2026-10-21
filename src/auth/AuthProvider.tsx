@@ -45,17 +45,26 @@ function isFirebaseConfigured(): boolean {
   );
 }
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<AuthUser | null>(null);
-  const [idToken, setIdToken] = React.useState<string | null>(null);
-  const [status, setStatus] = React.useState<AuthStatus>("loading");
+const FIREBASE_CONFIGURED = isFirebaseConfigured();
 
-  // Mock mode: no Firebase, no network. Authenticated immediately.
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  // Initial state is derived rather than assigned in an effect: that avoids a
+  // first-paint flash of the signed-out UI and a needless extra render.
+  const [user, setUser] = React.useState<AuthUser | null>(() =>
+    USE_MOCKS ? MOCK_USER : null
+  );
+  const [idToken, setIdToken] = React.useState<string | null>(() =>
+    USE_MOCKS ? MOCK_TOKEN : null
+  );
+  const [status, setStatus] = React.useState<AuthStatus>(() => {
+    if (USE_MOCKS) return "authenticated";
+    return FIREBASE_CONFIGURED ? "loading" : "unauthenticated";
+  });
+
+  // Mock mode: no Firebase, no network. Only the API client (an external
+  // system) is touched here; auth state is already initialised above.
   React.useEffect(() => {
     if (!USE_MOCKS) return;
-    setUser(MOCK_USER);
-    setIdToken(MOCK_TOKEN);
-    setStatus("authenticated");
     setToken(MOCK_TOKEN);
     return () => clearToken();
   }, []);
@@ -64,8 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     if (USE_MOCKS) return;
 
-    if (!isFirebaseConfigured()) {
-      setStatus("unauthenticated");
+    if (!FIREBASE_CONFIGURED) {
       clearToken();
       return;
     }
