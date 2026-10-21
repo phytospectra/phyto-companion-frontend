@@ -20,6 +20,8 @@ import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/phyto/layout/PageHeader";
 
 const ACCEPTED_EXTS = [".zip", ".mgf", ".mzML", ".mzXML", ".csv", ".jdx"];
+/** Case-insensitive lookup: file extensions arrive lower-cased (.mzML → .mzml). */
+const ACCEPTED_EXT_SET = new Set(ACCEPTED_EXTS.map((e) => e.toLowerCase()));
 
 const schema = z.object({
   species: z.string().min(1, "Species is required (genus species)"),
@@ -73,7 +75,7 @@ export function UploadPage({ onRunStarted }: UploadPageProps) {
     if (!newFiles) return;
     const filtered = Array.from(newFiles).filter((f) => {
       const ext = f.name.slice(f.name.lastIndexOf(".")).toLowerCase();
-      return ACCEPTED_EXTS.includes(ext);
+      return ACCEPTED_EXT_SET.has(ext);
     });
     if (filtered.length < Array.from(newFiles).length) {
       toast({
