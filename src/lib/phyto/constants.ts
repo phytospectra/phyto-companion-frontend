@@ -142,6 +142,9 @@ export const TOKEN_PACKS: TokenPack[] = [
 /** New users get 50 free tokens. */
 export const FREE_TOKENS_ON_SIGNUP = 50;
 
+/** Fixture run used by direct links to /analysis and /results before a run exists. */
+export const DEFAULT_RUN_ID = "run_4a7e9c2b";
+
 /**
  * App-level constants.
  */

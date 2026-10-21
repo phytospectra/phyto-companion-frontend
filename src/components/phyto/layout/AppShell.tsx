@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import {
   Coins,
@@ -10,7 +12,6 @@ import {
   Activity,
   Share2,
   ListTree,
-  FlaskConical,
   Microscope,
   Receipt,
   Settings,
@@ -31,41 +32,62 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTokenStore } from "@/lib/phyto/stores";
 import { useAuth } from "@/auth/AuthProvider";
-import { APP_META } from "@/lib/phyto/constants";
+import { APP_META, DEFAULT_RUN_ID } from "@/lib/phyto/constants";
 import { formatRelativeTime } from "@/lib/phyto/formatting";
 import { cn } from "@/lib/utils";
 import type { PageId } from "./types";
 
 interface NavItem {
   id: PageId;
+  href: string;
   label: string;
   icon: LucideIcon;
   hint?: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: "upload", label: "Upload", icon: Upload, hint: "Start a new run" },
-  { id: "analysis", label: "Analysis", icon: Activity, hint: "Task graph + checkpoints" },
-  { id: "network", label: "Network", icon: Share2, hint: "MS2 / HSQC / Fused / Bioactivity" },
-  { id: "elucidation", label: "Elucidation", icon: ListTree, hint: "Candidates + novel + localisation" },
-  { id: "pharmacology", label: "Pharmacology", icon: Microscope, hint: "Targets + mechanism hypothesis" },
-  { id: "results", label: "Results", icon: FileText, hint: "Assembled report" },
-  { id: "billing", label: "Billing", icon: Receipt, hint: "Token packs + transactions" },
-  { id: "settings", label: "Settings", icon: Settings, hint: "LLM provider + model version" },
+  { id: "upload", href: "/upload", label: "Upload", icon: Upload, hint: "Start a new run" },
+  { id: "analysis", href: `/analysis/${DEFAULT_RUN_ID}`, label: "Analysis", icon: Activity, hint: "Task graph + checkpoints" },
+  { id: "network", href: "/network", label: "Network", icon: Share2, hint: "MS2 / HSQC / Fused / Bioactivity" },
+  { id: "elucidation", href: "/elucidation", label: "Elucidation", icon: ListTree, hint: "Candidates + novel + localisation" },
+  { id: "pharmacology", href: "/pharmacology", label: "Pharmacology", icon: Microscope, hint: "Targets + mechanism hypothesis" },
+  { id: "results", href: `/results/${DEFAULT_RUN_ID}`, label: "Results", icon: FileText, hint: "Assembled report" },
+  { id: "billing", href: "/billing", label: "Billing", icon: Receipt, hint: "Token packs + transactions" },
+  { id: "settings", href: "/settings", label: "Settings", icon: Settings, hint: "LLM provider + model version" },
 ];
 
+/** Derive the active nav id from the current URL path. */
+function activePageFromPath(pathname: string | null): PageId {
+  if (!pathname) return "upload";
+  const segment = pathname.split("/").filter(Boolean)[0];
+  if (
+    segment === "upload" ||
+    segment === "analysis" ||
+    segment === "network" ||
+    segment === "elucidation" ||
+    segment === "pharmacology" ||
+    segment === "results" ||
+    segment === "billing" ||
+    segment === "settings"
+  ) {
+    return segment;
+  }
+  return "upload";
+}
+
 interface AppShellProps {
-  activePage: PageId;
-  onNavigate: (page: PageId) => void;
   children: React.ReactNode;
 }
 
-export function AppShell({ activePage, onNavigate, children }: AppShellProps) {
+export function AppShell({ children }: AppShellProps) {
+  const pathname = usePathname();
+  const activePage = activePageFromPath(pathname);
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header onNavigate={onNavigate} activePage={activePage} />
+      <Header activePage={activePage} />
       <div className="flex flex-1 flex-col md:flex-row">
-        <Sidebar activePage={activePage} onNavigate={onNavigate} />
+        <Sidebar activePage={activePage} />
         <main
           className="flex-1 min-w-0 px-4 py-6 md:px-8"
           aria-label="Main content"
@@ -78,13 +100,7 @@ export function AppShell({ activePage, onNavigate, children }: AppShellProps) {
   );
 }
 
-function Header({
-  onNavigate,
-  activePage,
-}: {
-  onNavigate: (page: PageId) => void;
-  activePage: PageId;
-}) {
+function Header({ activePage }: { activePage: PageId }) {
   const { user, signOut } = useAuth();
   const balance = useTokenStore((s) => s.balance);
   const { theme, setTheme } = useTheme();
@@ -100,9 +116,8 @@ function Header({
     >
       <div className="flex h-14 items-center gap-2 px-4 md:px-6">
         {/* Logo */}
-        <button
-          type="button"
-          onClick={() => onNavigate("upload")}
+        <Link
+          href="/upload"
           className="flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-accent transition-colors"
           aria-label="Phytospectra home"
         >
@@ -115,7 +130,7 @@ function Header({
           <span className="hidden sm:inline text-sm font-semibold tracking-tight">
             {APP_META.name}
           </span>
-        </button>
+        </Link>
 
         <span className="hidden md:inline text-xs text-muted-foreground">
           {APP_META.tagline}
@@ -123,9 +138,8 @@ function Header({
 
         <div className="ml-auto flex items-center gap-1.5 md:gap-3">
           {/* Balance badge */}
-          <button
-            type="button"
-            onClick={() => onNavigate("billing")}
+          <Link
+            href="/billing"
             className={cn(
               "group inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-sm transition-colors",
               isLow
@@ -145,7 +159,7 @@ function Header({
             <span className="hidden sm:inline text-xs text-muted-foreground">
               tokens
             </span>
-          </button>
+          </Link>
 
           {/* Theme toggle */}
           {mounted && (
@@ -194,13 +208,17 @@ function Header({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={() => onNavigate("billing")}>
-                <Coins aria-hidden="true" style={{ width: "0.95rem", height: "0.95rem" }} />
-                Billing & tokens
+              <DropdownMenuItem asChild>
+                <Link href="/billing">
+                  <Coins aria-hidden="true" style={{ width: "0.95rem", height: "0.95rem" }} />
+                  Billing &amp; tokens
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => onNavigate("settings")}>
-                <Settings aria-hidden="true" style={{ width: "0.95rem", height: "0.95rem" }} />
-                Settings
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <Settings aria-hidden="true" style={{ width: "0.95rem", height: "0.95rem" }} />
+                  Settings
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -223,10 +241,9 @@ function Header({
           const Icon = item.icon;
           const active = activePage === item.id;
           return (
-            <button
+            <Link
               key={item.id}
-              type="button"
-              onClick={() => onNavigate(item.id)}
+              href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
                 "inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium whitespace-nowrap transition-colors",
@@ -237,7 +254,7 @@ function Header({
             >
               <Icon aria-hidden="true" style={{ width: "0.85rem", height: "0.85rem" }} />
               {item.label}
-            </button>
+            </Link>
           );
         })}
       </nav>
@@ -245,13 +262,7 @@ function Header({
   );
 }
 
-function Sidebar({
-  activePage,
-  onNavigate,
-}: {
-  activePage: PageId;
-  onNavigate: (page: PageId) => void;
-}) {
+function Sidebar({ activePage }: { activePage: PageId }) {
   return (
     <aside
       className="hidden md:flex w-56 shrink-0 flex-col border-r bg-card/30"
@@ -262,13 +273,12 @@ function Sidebar({
           const Icon = item.icon;
           const active = activePage === item.id;
           return (
-            <button
+            <Link
               key={item.id}
-              type="button"
-              onClick={() => onNavigate(item.id)}
+              href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "w-full text-left rounded-md px-2.5 py-2 transition-colors",
+                "block w-full text-left rounded-md px-2.5 py-2 transition-colors",
                 active
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -298,7 +308,7 @@ function Sidebar({
                   )}
                 </div>
               </div>
-            </button>
+            </Link>
           );
         })}
       </nav>
