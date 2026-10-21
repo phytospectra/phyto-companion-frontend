@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload, FileText, X, FileBox, FlaskRound } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -55,7 +55,7 @@ export function UploadPage({ onRunStarted }: UploadPageProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as Resolver<FormValues>,
     defaultValues: {
       species: "Camellia sinensis",
       plant_part: "leaf",

@@ -18,7 +18,7 @@ import {
   Network,
 } from "lucide-react";
 import { EvidenceGraph } from "./EvidenceGraph";
-import type { EvidenceGraphT } from "@/lib/phyto/types";
+import type { EvidenceGraph as EvidenceGraphT } from "@/lib/phyto/types";
 import { cn } from "@/lib/utils";
 
 interface EvidencePanelProps {

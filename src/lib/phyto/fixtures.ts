@@ -2,6 +2,7 @@ import type {
   AuditEntry,
   CandidateRank,
   Checkpoint,
+  EvidenceGraph,
   MechanismHypothesis,
   Network,
   RunState,
@@ -33,7 +34,7 @@ export const MOCK_BALANCE: TokenBalance = {
 // Evidence graphs
 // ---------------------------------------------------------------------------
 
-const evidenceForQuercetin = {
+const evidenceForQuercetin: EvidenceGraph = {
   nodes: [
     { id: "n1", claim: "MS2 fragment at m/z 137.0233 (C7H5O2+)", type: "observation", confidence: 0.98 },
     { id: "n2", claim: "MS2 fragment at m/z 153.0181 (C7H5O3+)", type: "observation", confidence: 0.97 },
