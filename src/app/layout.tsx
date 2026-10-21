@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/phyto/theme-provider";
 import { QueryProvider } from "@/components/phyto/query-provider";
+import { MockProvider } from "@/components/phyto/mock-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,8 +48,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            {children}
-            <Toaster />
+            <MockProvider>
+              {children}
+              <Toaster />
+            </MockProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>
