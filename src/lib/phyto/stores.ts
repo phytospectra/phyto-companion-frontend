@@ -2,54 +2,8 @@
 
 import { create } from "zustand";
 import type { TokenBalance } from "./types";
-import { MOCK_BALANCE, MOCK_USER } from "./fixtures";
+import { MOCK_BALANCE } from "./fixtures";
 import { FREE_TOKENS_ON_SIGNUP } from "./constants";
-
-/**
- * Auth store.
- *
- * IMPORTANT (per spec): the real backend's Firebase ID token is NEVER
- * persisted to localStorage (XSS risk). Firebase handles session
- * persistence internally; the in-memory idToken is fetched fresh before
- * each request via `await user.getIdToken()`.
- *
- * In this sandbox demo we have no Firebase, so we store a mock idToken in
- * memory only (zustand without persist). The demo starts signed-in by
- * default so the reviewer can immediately interact with the app — in the
- * real app the AuthProvider would call `onAuthStateChanged` and the user
- * would have to sign in via the LoginPage.
- */
-interface MockUser {
-  uid: string;
-  email: string;
-  displayName: string;
-  institution: string;
-}
-
-interface AuthState {
-  user: MockUser | null;
-  idToken: string | null; // memory only — never persisted
-  status: "loading" | "authenticated" | "unauthenticated";
-
-  signIn: (user: MockUser) => void;
-  signOut: () => void;
-}
-
-export const useAuthStore = create<AuthState>((set) => ({
-  // Demo starts signed-in as the mock researcher so the reviewer can
-  // immediately exercise every page.
-  user: MOCK_USER,
-  idToken: `mock-id-token-${MOCK_USER.uid}`,
-  status: "authenticated",
-  signIn: (user) =>
-    set({
-      user,
-      idToken: `mock-id-token-${user.uid}-${Date.now()}`,
-      status: "authenticated",
-    }),
-  signOut: () =>
-    set({ user: null, idToken: null, status: "unauthenticated" }),
-}));
 
 /**
  * Token balance store.
@@ -138,4 +92,4 @@ export function addTokens(n: number): void {
   }
 }
 
-export { MOCK_USER };
+export { MOCK_USER } from "./fixtures";

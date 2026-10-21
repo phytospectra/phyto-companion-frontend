@@ -29,7 +29,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuthStore, useTokenStore } from "@/lib/phyto/stores";
+import { useTokenStore } from "@/lib/phyto/stores";
+import { useAuth } from "@/auth/AuthProvider";
 import { APP_META } from "@/lib/phyto/constants";
 import { formatRelativeTime } from "@/lib/phyto/formatting";
 import { cn } from "@/lib/utils";
@@ -84,7 +85,7 @@ function Header({
   onNavigate: (page: PageId) => void;
   activePage: PageId;
 }) {
-  const { user, signOut } = useAuthStore();
+  const { user, signOut } = useAuth();
   const balance = useTokenStore((s) => s.balance);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
@@ -190,9 +191,6 @@ function Header({
                   <div className="font-normal text-xs text-muted-foreground">
                     {user?.email}
                   </div>
-                  <div className="font-normal text-[11px] text-muted-foreground">
-                    {user?.institution}
-                  </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -206,7 +204,7 @@ function Header({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onSelect={() => signOut()}
+                onSelect={() => void signOut()}
                 className="text-rose-700 dark:text-rose-400 focus:text-rose-800 dark:focus:text-rose-300"
               >
                 <LogOut aria-hidden="true" style={{ width: "0.95rem", height: "0.95rem" }} />

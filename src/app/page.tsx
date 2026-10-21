@@ -14,6 +14,7 @@ import { ResultsPage } from "@/components/phyto/ResultsPage";
 import { BillingPage } from "@/components/phyto/billing/BillingPage";
 import { SettingsPage } from "@/components/phyto/SettingsPage";
 import { useTokenStore } from "@/lib/phyto/stores";
+import { ProtectedRoute } from "@/auth/ProtectedRoute";
 
 /**
  * Phytospectra — single-page demo composition.
@@ -87,27 +88,29 @@ export default function Home() {
   }
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <AppShell activePage={page} onNavigate={navigate}>
-        {page === "upload" && <UploadPage onRunStarted={onRunStarted} />}
-        {page === "analysis" && (
-          <AnalysisPage
-            run_id={runId}
-            onViewResults={() => setPage("results")}
-          />
-        )}
-        {page === "network" && <NetworkPage />}
-        {page === "elucidation" && <ElucidationPage />}
-        {page === "pharmacology" && <PharmacologyPage />}
-        {page === "results" && (
-          <ResultsPage onNavigateToMechanism={() => setPage("pharmacology")} />
-        )}
-        {page === "billing" && (
-          <BillingPage onTriggerInsufficient={simulateInsufficient} />
-        )}
-        {page === "settings" && <SettingsPage />}
-      </AppShell>
-      <InsufficientTokensModal onGoToBilling={() => setPage("billing")} />
-    </TooltipProvider>
+    <ProtectedRoute>
+      <TooltipProvider delayDuration={200}>
+        <AppShell activePage={page} onNavigate={navigate}>
+          {page === "upload" && <UploadPage onRunStarted={onRunStarted} />}
+          {page === "analysis" && (
+            <AnalysisPage
+              run_id={runId}
+              onViewResults={() => setPage("results")}
+            />
+          )}
+          {page === "network" && <NetworkPage />}
+          {page === "elucidation" && <ElucidationPage />}
+          {page === "pharmacology" && <PharmacologyPage />}
+          {page === "results" && (
+            <ResultsPage onNavigateToMechanism={() => setPage("pharmacology")} />
+          )}
+          {page === "billing" && (
+            <BillingPage onTriggerInsufficient={simulateInsufficient} />
+          )}
+          {page === "settings" && <SettingsPage />}
+        </AppShell>
+        <InsufficientTokensModal onGoToBilling={() => setPage("billing")} />
+      </TooltipProvider>
+    </ProtectedRoute>
   );
 }

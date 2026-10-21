@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/phyto/theme-provider";
 import { QueryProvider } from "@/components/phyto/query-provider";
 import { MockProvider } from "@/components/phyto/mock-provider";
+import { AuthProvider } from "@/auth/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,8 +50,10 @@ export default function RootLayout({
         >
           <QueryProvider>
             <MockProvider>
-              {children}
-              <Toaster />
+              <AuthProvider>
+                {children}
+                <Toaster />
+              </AuthProvider>
             </MockProvider>
           </QueryProvider>
         </ThemeProvider>
