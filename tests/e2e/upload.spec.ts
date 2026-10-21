@@ -24,9 +24,12 @@ test("uploads a spectra file and starts an analysis run", async ({ page }) => {
   await expect(page).toHaveURL(/\/analysis\/[^/]+$/);
   await expect(page.getByRole("heading", { name: /analysis ·/i })).toBeVisible();
 
-  // The run pauses for human review before any novel generation.
-  await expect(page.getByText(/human review required/i)).toBeVisible();
+  // The run pauses for human review before any novel generation. The mock
+  // advances one task per poll, so allow time for it to reach the gate.
   await expect(
-    page.getByRole("button", { name: /approve the checkpoint/i })
+    page.getByRole("heading", { name: /approval required/i })
+  ).toBeVisible({ timeout: 15_000 });
+  await expect(
+    page.getByRole("button", { name: /approve and continue/i })
   ).toBeVisible();
 });

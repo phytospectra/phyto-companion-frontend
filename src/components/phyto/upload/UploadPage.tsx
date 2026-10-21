@@ -38,6 +38,7 @@ export function UploadPage({ onRunStarted }: UploadPageProps) {
   const [submitting, setSubmitting] = React.useState(false);
 
   const setInsufficient = useTokenStore((s) => s.setInsufficientTokensError);
+  const setPendingRetry = useTokenStore((s) => s.setPendingRetryOp);
 
   const form = useForm<UploadFormValues>({
     resolver: zodResolver(uploadSchema) as Resolver<UploadFormValues>,
@@ -108,10 +109,16 @@ export function UploadPage({ onRunStarted }: UploadPageProps) {
         // The global modal subscribes to the store; keep the retry wired so
         // the same click resumes after top-up.
         setInsufficient({
-          operation_id: e.url,
+          operation_id: "start_run",
           balance: e.balance,
           required: e.required,
           topup_url: e.topup_url,
+        });
+        // Re-submitting the same form after top-up is a fresh POST, and the
+        // client generates a new Idempotency-Key per call, so it is safe.
+        setPendingRetry({
+          operation_id: "start_run",
+          retry: () => form.handleSubmit(onSubmit)(),
         });
       } else {
         toast({

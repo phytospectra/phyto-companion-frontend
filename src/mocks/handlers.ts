@@ -492,6 +492,12 @@ export const handlers: RequestHandler[] = [
     const terminal = stored.status === "complete" || stored.status === "failed";
     if (terminal) return HttpResponse.json(stored);
 
+    // A run parked at a checkpoint, or already paused, only changes when the
+    // user acts — polling must not advance it past the human gate.
+    if (stored.status === "awaiting_review" || stored.status === "pending") {
+      return HttpResponse.json(stored);
+    }
+
     const next = advanceRun(stored);
     state.runs.set(runId, next);
     return HttpResponse.json(next);

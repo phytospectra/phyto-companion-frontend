@@ -136,15 +136,26 @@ function Field({
   className?: string;
   children: React.ReactNode;
 }) {
+  const id = React.useId();
+  const errorId = `${id}-error`;
+  // Associate the label with the control so it is announced and clickable.
+  const control = React.isValidElement<{ id?: string; "aria-describedby"?: string; "aria-invalid"?: boolean }>(children)
+    ? React.cloneElement(children, {
+        id,
+        "aria-describedby": error ? errorId : undefined,
+        "aria-invalid": error ? true : undefined,
+      })
+    : children;
+
   return (
     <div className={cn("space-y-1", className)}>
-      <Label className="text-xs font-medium">
+      <Label htmlFor={id} className="text-xs font-medium">
         {label}
         {required && <span className="ml-0.5 text-rose-600">*</span>}
       </Label>
-      {children}
+      {control}
       {error && (
-        <p role="alert" className="text-[11px] text-rose-600">
+        <p id={errorId} role="alert" className="text-[11px] text-rose-600">
           {error}
         </p>
       )}

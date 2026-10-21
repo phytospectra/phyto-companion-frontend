@@ -54,8 +54,10 @@ export const uploadSchema = z.object({
     .optional()
     .transform((v) => (v === "" ? undefined : v))
     .refine(
-      (v) => v === undefined || (typeof v === "number" && Number.isFinite(v)) ||
-        (typeof v === "string" && /^\d+(\.\d+)?$/.test(v)),
+      (v) =>
+        v === undefined ||
+        (typeof v === "number" && Number.isFinite(v) && v > 0) ||
+        (typeof v === "string" && /^\d+(\.\d+)?$/.test(v) && Number(v) > 0),
       { message: "HRMS m/z must be a positive number" }
     ),
   compound_adduct: z
