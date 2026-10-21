@@ -21,10 +21,12 @@ import {
   MOCK_SITE_LOCALIZATION,
   MOCK_TRANSACTIONS,
 } from "@/lib/phyto/fixtures";
-import { PRICING_TABLE, TOKEN_PACKS } from "@/lib/phyto/constants";
+import { PRICING_TABLE, TOKEN_PACKS, WORKFLOWS } from "@/lib/phyto/constants";
 import type {
+  AuditEntry,
   Balance,
   CandidateRank,
+  Checkpoint,
   Citation,
   EvidenceGraph,
   MechanismHypothesis,
@@ -35,6 +37,7 @@ import type {
   RunState,
   SiteLocalization,
   Task,
+  TaskStatus,
   Transaction,
   Workspace,
 } from "@/api/types";
@@ -48,6 +51,11 @@ interface MockState {
   transactions: Transaction[];
   idempotency: Map<string, { status: number; body: unknown }>;
   runs: Map<string, RunState>;
+  /**
+   * Simulated lifecycle bookkeeping. Each GET /runs/:run_id advances the
+   * run one stage so the UI can be exercised without a real orchestrator.
+   */
+  runMeta: Map<string, { polls: number; approved: boolean }>;
 }
 
 function initialState(): MockState {
@@ -69,6 +77,7 @@ function initialState(): MockState {
     })),
     idempotency: new Map(),
     runs: new Map([[MOCK_RUN_STATE.run_id, MOCK_RUN_STATE as RunState]]),
+    runMeta: new Map(),
   };
 }
 
@@ -170,6 +179,140 @@ function remember(request: Request, status: number, body: unknown): void {
 function runFromFixture(runId: string): RunState {
   return { ...(MOCK_RUN_STATE as RunState), run_id: runId };
 }
+
+// ---------------------------------------------------------------------------
+// Simulated run lifecycle
+// ---------------------------------------------------------------------------
+
+/** Slugify a workflow step label into a tool name (`Network MS2` → `network_ms2`). */
+function toolName(step: string): string {
+  return step.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/(^_|_$)/g, "");
+}
+
+/**
+ * Build a fresh run for a workflow: every task pending, the first running,
+ * and a post_elucidation checkpoint that pauses the run for human review.
+ */
+function newRun(runId: string, workflow: RunState["workflow"]): RunState {
+  const wf = WORKFLOWS.find((w) => w.id === workflow) ?? WORKFLOWS[0];
+  const now = new Date().toISOString();
+  const tasks: Task[] = wf.steps.map((step, i) => ({
+    task_id: `t${i + 1}`,
+    tool_name: toolName(step),
+    status: i === 0 ? ("running" as TaskStatus) : ("pending" as TaskStatus),
+    started_at: i === 0 ? now : undefined,
+  }));
+  tasks.push({
+    task_id: `t${tasks.length + 1}`,
+    tool_name: "checkpoint_review",
+    status: "pending",
+  });
+
+  const checkpoint: Checkpoint = {
+    name: "post_elucidation",
+    description:
+      "Review ranked candidates before any novel-structure generation proceeds. The system will not generate novel relatives without your explicit approval.",
+    artifacts: ["ranked_candidates", "evidence_graph", "gaps_report"],
+    authorized_phase: ["novel_generate", "localize_site"],
+    requires_tier3_authorization: true,
+  };
+
+  return {
+    run_id: runId,
+    status: "running",
+    workflow,
+    task_graph: { tasks, checkpoints: [checkpoint] },
+    awaiting_checkpoint: undefined,
+    artifacts: {},
+    audit_tail: [
+      {
+        ts: now,
+        event: "run_started",
+        actor: "user",
+        detail: `workflow=${workflow}`,
+      },
+    ],
+    model_version: MOCK_RUN_STATE.model_version,
+    cost_so_far: { tokens: PRICING_TABLE.run_analysis, usd: 0 },
+  };
+}
+
+/**
+ * Advance a running run one poll's worth. This is test/demo scaffolding:
+ * a real orchestrator would be the one changing status. We complete tasks
+ * one by one, then stop at the checkpoint, then finish once approved.
+ */
+function advanceRun(run: RunState): RunState {
+  const meta = state.runMeta.get(run.run_id) ?? { polls: 0, approved: false };
+  meta.polls += 1;
+  state.runMeta.set(run.run_id, meta);
+
+  // Pause at the human checkpoint after two polls (~4s at 2s interval).
+  if (!meta.approved && meta.polls >= 2) {
+    const tasks = run.task_graph.tasks.map((t) =>
+      t.tool_name === "checkpoint_review"
+        ? { ...t, status: "pending" as TaskStatus }
+        : { ...t, status: "completed" as TaskStatus, completed_at: new Date().toISOString() }
+    );
+    return {
+      ...run,
+      status: "awaiting_review",
+      task_graph: { ...run.task_graph, tasks },
+      awaiting_checkpoint: run.task_graph.checkpoints[0],
+      audit_tail: [
+        ...run.audit_tail,
+        {
+          ts: new Date().toISOString(),
+          event: "checkpoint_reached",
+          actor: "system",
+          detail: "post_elucidation: awaiting human review",
+        },
+      ],
+    };
+  }
+
+  // Advance exactly one pending/running task per poll.
+  const index = run.task_graph.tasks.findIndex(
+    (t) => t.status === "running" || t.status === "pending"
+  );
+  const tasks = run.task_graph.tasks.map((t, i) => {
+    if (i === index) {
+      return {
+        ...t,
+        status: "completed" as TaskStatus,
+        started_at: t.started_at ?? new Date().toISOString(),
+        completed_at: new Date().toISOString(),
+      };
+    }
+    if (i === index + 1 && t.status === "pending") {
+      return { ...t, status: "running" as TaskStatus, started_at: new Date().toISOString() };
+    }
+    return t;
+  });
+
+  const allDone = tasks.every((t) => t.status === "completed");
+  const completedTasks = tasks.filter((t) => t.status === "completed").length;
+
+  return {
+    ...run,
+    status: allDone && meta.approved ? "complete" : "running",
+    task_graph: { ...run.task_graph, tasks },
+    audit_tail: [
+      ...run.audit_tail,
+      {
+        ts: new Date().toISOString(),
+        event: "task_completed",
+        actor: "system",
+        detail: `${tasks[Math.max(index, 0)]?.tool_name ?? "task"} (${completedTasks}/${tasks.length})`,
+      },
+    ],
+    cost_so_far: {
+      ...run.cost_so_far,
+      tokens: run.cost_so_far.tokens + 1,
+    },
+  };
+}
+
 
 // ---------------------------------------------------------------------------
 // Synthetic data for endpoints without fixtures
@@ -304,6 +447,25 @@ export const handlers: RequestHandler[] = [
   }),
 
   // Runs ---------------------------------------------------------------------
+  // POST /runs is the Phase 2 contract. POST /analysis is kept because the
+  // Phase 1 upload path and its tests still exercise it.
+  http.post("*/runs", async ({ request }) => {
+    const check = charge(request, PRICING_TABLE.run_analysis);
+    if (check.response) return check.response;
+    const body = (await request.json()) as {
+      user_goal?: string;
+      workflow?: RunState["workflow"];
+    };
+    const runId = `run_${Date.now().toString(36)}${Math.random()
+      .toString(36)
+      .slice(2, 6)}`;
+    const workflow = body.workflow ?? "identify";
+    state.runs.set(runId, newRun(runId, workflow));
+    state.runMeta.set(runId, { polls: 0, approved: false });
+    remember(request, 202, { run_id: runId, status: "running" });
+    return HttpResponse.json({ run_id: runId, status: "running" }, { status: 202 });
+  }),
+
   http.post("*/analysis", async ({ request }) => {
     const check = charge(request, PRICING_TABLE.run_analysis);
     if (check.response) return check.response;
@@ -324,26 +486,123 @@ export const handlers: RequestHandler[] = [
   http.get("*/runs/:run_id", ({ request, params }) => {
     if (!isAuthorized(request)) return unauthorized();
     const runId = String(params.run_id);
-    const run = state.runs.get(runId) ?? runFromFixture(runId);
-    return HttpResponse.json(run);
+    const stored = state.runs.get(runId);
+    if (!stored) return HttpResponse.json(runFromFixture(runId));
+
+    const terminal = stored.status === "complete" || stored.status === "failed";
+    if (terminal) return HttpResponse.json(stored);
+
+    const next = advanceRun(stored);
+    state.runs.set(runId, next);
+    return HttpResponse.json(next);
   }),
 
   http.post("*/runs/:run_id/checkpoint", async ({ request, params }) => {
     if (!isAuthorized(request)) return unauthorized();
     const runId = String(params.run_id);
-    const body = (await request.json()) as { approved: boolean; reason?: string };
+    const body = (await request.json()) as {
+      approved: boolean;
+      reason?: string;
+    };
     const base = state.runs.get(runId) ?? runFromFixture(runId);
+    const now = new Date().toISOString();
+
+    const tasks = base.task_graph.tasks.map((t) => {
+      if (t.tool_name === "checkpoint_review") {
+        return {
+          ...t,
+          status: body.approved ? ("completed" as TaskStatus) : ("skipped" as TaskStatus),
+          started_at: now,
+          completed_at: now,
+        };
+      }
+      // Rejection stops the run: remaining pending work is skipped.
+      if (!body.approved && (t.status === "pending" || t.status === "running")) {
+        return { ...t, status: "skipped" as TaskStatus };
+      }
+      return t;
+    });
+
+    const decisionEntries: AuditEntry[] = [
+      {
+        ts: now,
+        event: body.approved ? "checkpoint_approved" : "checkpoint_rejected",
+        actor: "user",
+        detail: `reason="${body.reason ?? ""}"`,
+      },
+    ];
+    if (!body.approved) {
+      decisionEntries.push({
+        ts: now,
+        event: "run_failed",
+        actor: "system",
+        detail: "Checkpoint rejected — no further metered operations ran.",
+      });
+    }
+
     const next: RunState = {
       ...base,
       status: body.approved ? "running" : "failed",
       awaiting_checkpoint: undefined,
+      task_graph: { ...base.task_graph, tasks },
+      audit_tail: [...base.audit_tail, ...decisionEntries],
+    };
+    state.runs.set(runId, next);
+    state.runMeta.set(runId, { polls: 999, approved: body.approved });
+    return HttpResponse.json(next);
+  }),
+
+  http.post("*/runs/:run_id/pause", ({ request, params }) => {
+    if (!isAuthorized(request)) return unauthorized();
+    const runId = String(params.run_id);
+    const base = state.runs.get(runId) ?? runFromFixture(runId);
+    const next: RunState = {
+      ...base,
+      status: "pending",
       audit_tail: [
         ...base.audit_tail,
         {
           ts: new Date().toISOString(),
-          event: body.approved ? "checkpoint_approved" : "checkpoint_rejected",
+          event: "run_paused",
           actor: "user",
-          detail: `reason="${body.reason ?? ""}"`,
+          detail: "Paused by user",
+        },
+      ],
+    };
+    state.runs.set(runId, next);
+    return HttpResponse.json(next);
+  }),
+
+  http.post("*/runs/:run_id/cancel", ({ request, params }) => {
+    if (!isAuthorized(request)) return unauthorized();
+    const runId = String(params.run_id);
+    const base = state.runs.get(runId) ?? runFromFixture(runId);
+    const now = new Date().toISOString();
+    const next: RunState = {
+      ...base,
+      status: "failed",
+      awaiting_checkpoint: undefined,
+      task_graph: {
+        ...base.task_graph,
+        tasks: base.task_graph.tasks.map((t) =>
+          t.status === "pending" || t.status === "running"
+            ? { ...t, status: "skipped" as TaskStatus }
+            : t
+        ),
+      },
+      audit_tail: [
+        ...base.audit_tail,
+        {
+          ts: now,
+          event: "run_cancelled",
+          actor: "user",
+          detail: "Cancelled by user",
+        },
+        {
+          ts: now,
+          event: "run_failed",
+          actor: "system",
+          detail: "Run cancelled before completion.",
         },
       ],
     };
