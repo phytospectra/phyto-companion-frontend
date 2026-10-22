@@ -157,4 +157,4 @@ server-rendered.
 
 ## License
 
-AGPL-3.0. See `LICENSE`.
+The software is available under the [Apache License 2.0](LICENSE).
