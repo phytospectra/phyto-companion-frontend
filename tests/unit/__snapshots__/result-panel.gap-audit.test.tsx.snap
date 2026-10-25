@@ -1,0 +1,2813 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`result panel gap audit (post-frontend backend features) > documents which backend features the production panel does NOT surface > backend-feature-visibility-matrix 1`] = `
+[
+  {
+    "expected": false,
+    "feature": "isolation evidence section",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "isolation_bonus",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "classification_chain",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "evidence_chain (layer items)",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "msi_level / top_candidate_msi_level",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "UV chromophore evidence",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "RT prediction evidence",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "level_1_match / reference standard",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "purity_score / peak purity",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "taxon prior",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "layer skip reasons",
+    "rendered": false,
+  },
+  {
+    "expected": false,
+    "feature": "data governance (data_tier/abs_status)",
+    "rendered": false,
+  },
+]
+`;
+
+exports[`result panel gap audit (post-frontend backend features) > matches the production ResultsPage snapshot (mock-fed, as shipped) 1`] = `
+<div>
+  <div
+    class="space-y-6"
+  >
+    <div
+      class="flex flex-col gap-2 border-b pb-4 md:flex-row md:items-end md:justify-between"
+    >
+      <div
+        class="min-w-0 space-y-1"
+      >
+        <div
+          class="text-[11px] font-medium uppercase tracking-wider text-muted-foreground"
+        >
+          Report · run run_4a7e9c2b
+        </div>
+        <h1
+          class="text-2xl font-semibold tracking-tight"
+        >
+          Assembled report
+        </h1>
+        <p
+          class="text-sm text-muted-foreground max-w-2xl"
+        >
+          A single, citation-bearing document you can hand to a reviewer. The mechanism section carries its disclaimer at the top; the provenance manifest is collapsible but never deleted.
+        </p>
+      </div>
+      <div
+        class="flex items-center gap-2"
+      >
+        <div
+          class="flex gap-2"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+            data-slot="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-download"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.85rem; height: 0.85rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 15V3"
+              />
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+              />
+              <path
+                d="m7 10 5 5 5-5"
+              />
+            </svg>
+            JSON
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+            data-slot="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-download"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.85rem; height: 0.85rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 15V3"
+              />
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+              />
+              <path
+                d="m7 10 5 5 5-5"
+              />
+            </svg>
+            CSV
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+            data-slot="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-download"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.85rem; height: 0.85rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 15V3"
+              />
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+              />
+              <path
+                d="m7 10 5 5 5-5"
+              />
+            </svg>
+            SDF
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+            data-slot="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-file-text"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.85rem; height: 0.85rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+              />
+              <path
+                d="M14 2v4a2 2 0 0 0 2 2h4"
+              />
+              <path
+                d="M10 9H8"
+              />
+              <path
+                d="M16 13H8"
+              />
+              <path
+                d="M16 17H8"
+              />
+            </svg>
+            PDF
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-base"
+          data-slot="card-title"
+        >
+          Sample summary
+        </div>
+      </div>
+      <div
+        class="px-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-xs"
+        data-slot="card-content"
+      >
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Species
+          </div>
+          <div
+            class="mt-0.5 text-sm"
+          >
+            Camellia sinensis
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Part
+          </div>
+          <div
+            class="mt-0.5 text-sm"
+          >
+            leaf
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Extraction
+          </div>
+          <div
+            class="mt-0.5 text-sm"
+          >
+            maceration, EtOH/H2O 7:3
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Workflow
+          </div>
+          <div
+            class="mt-0.5 text-sm"
+          >
+            identify
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Model version
+          </div>
+          <div
+            class="mt-0.5 font-mono text-sm"
+          >
+            phyto-orchestrator-v0.4.2
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Tokens used
+          </div>
+          <div
+            class="mt-0.5 font-mono text-sm"
+          >
+            15
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Run ID
+          </div>
+          <div
+            class="mt-0.5 font-mono text-sm"
+          >
+            run_4a7e9c2b
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Verdict
+          </div>
+          <div
+            class="mt-0.5 font-mono text-sm"
+          >
+            —
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-base flex items-center justify-between gap-2"
+          data-slot="card-title"
+        >
+          <span
+            class="flex items-center gap-2"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-flask-conical"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 1rem; height: 1rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"
+              />
+              <path
+                d="M6.453 15h11.094"
+              />
+              <path
+                d="M8.5 2h7"
+              />
+            </svg>
+            Top candidate
+          </span>
+          <span
+            aria-label="Verdict: Confirmed. Multiple independent spectral features match a reference at the species level. Suitable for publication as an identification (subject to reviewer sign-off)."
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200 text-[11px] gap-1.5 font-medium"
+            data-slot="tooltip-trigger"
+            data-state="closed"
+            role="status"
+          >
+            <span
+              aria-hidden="true"
+              class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"
+            />
+            <span>
+              Confirmed
+            </span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-question-mark opacity-60"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.75rem; height: 0.75rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+              />
+              <path
+                d="M12 17h.01"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="text-muted-foreground text-sm"
+          data-slot="card-description"
+        >
+          Quercetin
+           · 
+          C15H10O7
+           · 
+          302.0427
+        </div>
+      </div>
+      <div
+        class="px-6 grid gap-6 lg:grid-cols-2"
+        data-slot="card-content"
+      >
+        <div
+          class="space-y-3 text-sm"
+        >
+          <div
+            class="grid grid-cols-3 gap-2 text-xs"
+          >
+            <div
+              class="rounded-md border bg-muted/30 p-2 text-center"
+            >
+              <div
+                class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+              >
+                Score
+              </div>
+              <div
+                class="font-mono text-sm tabular-nums"
+              >
+                0.91
+              </div>
+            </div>
+            <div
+              class="rounded-md border bg-muted/30 p-2 text-center"
+            >
+              <div
+                class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+              >
+                Coverage
+              </div>
+              <div
+                class="font-mono text-sm tabular-nums"
+              >
+                88%
+              </div>
+            </div>
+            <div
+              class="rounded-md border bg-muted/30 p-2 text-center"
+            >
+              <div
+                class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+              >
+                Margin
+              </div>
+              <div
+                class="font-mono text-sm tabular-nums"
+              >
+                12%
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1"
+            >
+              Source
+            </div>
+            <div
+              class="font-mono text-xs"
+            >
+              LOTUS_isolate_4127
+            </div>
+          </div>
+          <div>
+            <div
+              class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1"
+            >
+              Open gaps
+            </div>
+            <ul
+              class="space-y-1 text-xs"
+            >
+              <li
+                class="flex items-start gap-1.5 rounded-md border border-orange-200 bg-orange-50/50 px-2 py-1 dark:border-orange-900 dark:bg-orange-950/40"
+              >
+                <span
+                  class="text-orange-600 dark:text-orange-400"
+                >
+                  ⚠
+                </span>
+                <span>
+                  Unmatched observed peak at m/z 165.0188 — possible methoxy adduct
+                </span>
+              </li>
+              <li
+                class="flex items-start gap-1.5 rounded-md border border-orange-200 bg-orange-50/50 px-2 py-1 dark:border-orange-900 dark:bg-orange-950/40"
+              >
+                <span
+                  class="text-orange-600 dark:text-orange-400"
+                >
+                  ⚠
+                </span>
+                <span>
+                  Unmatched predicted peak at m/z 121.0284 — low-abundance, may be below noise floor
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div
+            class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm p-3"
+            data-slot="card"
+          >
+            <div
+              class="flex flex-col gap-2 w-full"
+              data-orientation="horizontal"
+              data-slot="tabs"
+              dir="ltr"
+            >
+              <div
+                aria-orientation="horizontal"
+                class="bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]"
+                data-orientation="horizontal"
+                data-slot="tabs-list"
+                role="tablist"
+                style="outline: none;"
+                tabindex="0"
+              >
+                <button
+                  aria-controls="radix-_r_1_-content-ms2"
+                  aria-selected="true"
+                  class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+                  data-orientation="horizontal"
+                  data-radix-collection-item=""
+                  data-slot="tabs-trigger"
+                  data-state="active"
+                  id="radix-_r_1_-trigger-ms2"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  MS2 mirror
+                </button>
+                <button
+                  aria-controls="radix-_r_1_-content-hsqc"
+                  aria-selected="false"
+                  class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+                  data-orientation="horizontal"
+                  data-radix-collection-item=""
+                  data-slot="tabs-trigger"
+                  data-state="inactive"
+                  id="radix-_r_1_-trigger-hsqc"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  HSQC overlay
+                </button>
+              </div>
+              <div
+                aria-labelledby="radix-_r_1_-trigger-ms2"
+                class="flex-1 outline-none mt-2"
+                data-orientation="horizontal"
+                data-slot="tabs-content"
+                data-state="active"
+                id="radix-_r_1_-content-ms2"
+                role="tabpanel"
+                style="animation-duration: 0s;"
+                tabindex="0"
+              >
+                <div
+                  class="space-y-2"
+                >
+                  <div
+                    class="flex items-center gap-3 text-xs text-muted-foreground"
+                  >
+                    <span
+                      class="flex items-center gap-1"
+                    >
+                      <span
+                        class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+                      />
+                      observed
+                    </span>
+                    <span
+                      class="flex items-center gap-1"
+                    >
+                      <span
+                        class="inline-block h-2 w-2 rounded-full bg-indigo-500"
+                      />
+                      predicted (mirrored)
+                    </span>
+                    <span
+                      class="flex items-center gap-1"
+                    >
+                      <span
+                        class="inline-block h-2 w-2 rounded-full bg-orange-500"
+                      />
+                      unmatched (gap)
+                    </span>
+                  </div>
+                  <div
+                    style="width: 100%; height: 220px;"
+                  >
+                    <div
+                      class="recharts-responsive-container"
+                      style="width: 100%; height: 100%; min-width: 0px;"
+                    />
+                  </div>
+                  <p
+                    class="text-xs text-muted-foreground"
+                  >
+                    Orange peaks in the observed trace have no predicted counterpart (gaps). Indigo peaks in the predicted trace have no observed counterpart.
+                  </p>
+                </div>
+              </div>
+              <div
+                aria-labelledby="radix-_r_1_-trigger-hsqc"
+                class="flex-1 outline-none mt-2"
+                data-orientation="horizontal"
+                data-slot="tabs-content"
+                data-state="inactive"
+                hidden=""
+                id="radix-_r_1_-content-hsqc"
+                role="tabpanel"
+                tabindex="0"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-base flex items-center gap-2"
+          data-slot="card-title"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-network"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            style="width: 1rem; height: 1rem;"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              height="6"
+              rx="1"
+              width="6"
+              x="16"
+              y="16"
+            />
+            <rect
+              height="6"
+              rx="1"
+              width="6"
+              x="2"
+              y="16"
+            />
+            <rect
+              height="6"
+              rx="1"
+              width="6"
+              x="9"
+              y="2"
+            />
+            <path
+              d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"
+            />
+            <path
+              d="M12 12V8"
+            />
+          </svg>
+          Mechanism hypothesis
+        </div>
+        <div
+          class="text-muted-foreground text-sm"
+          data-slot="card-description"
+        >
+          For 
+          Quercetin
+          . Confidence 
+          0.62
+          .
+        </div>
+      </div>
+      <div
+        class="px-6 space-y-4"
+        data-slot="card-content"
+      >
+        <div
+          aria-label="HYPOTHESIS (computational, not experimental)"
+          class="flex gap-3 rounded-lg border px-4 py-3 text-sm leading-snug border-orange-300 bg-orange-50 text-orange-950 dark:border-orange-800 dark:bg-orange-950/60 dark:text-orange-100"
+          role="note"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-triangle-alert mt-0.5 shrink-0"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            style="width: 1.1rem; height: 1.1rem;"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+            />
+            <path
+              d="M12 9v4"
+            />
+            <path
+              d="M12 17h.01"
+            />
+          </svg>
+          <div
+            class="space-y-0.5"
+          >
+            <div
+              class="font-semibold tracking-wide uppercase text-[11px]"
+            >
+              HYPOTHESIS (computational, not experimental)
+            </div>
+            <div
+              class="text-[13px] font-normal leading-relaxed"
+            >
+              The mechanism section below is an LLM-generated synthesis of literature and docking predictions. It is a starting point for experimental design — not a claim, not an identification.
+            </div>
+          </div>
+        </div>
+        <p
+          class="text-sm leading-relaxed"
+        >
+          Quercetin is hypothesised to inhibit PI3K/Akt signalling upstream of mTORC1, partially via direct binding to the ATP-binding pocket of PI3Kα (predicted docking score −9.2 kcal/mol, 3 out of 4 supporting studies concordant). Concurrent inhibition of the NF-κB axis (p65 translocation reduced 38% in 2 of 3 cited cell models) suggests a polypharmacology profile consistent with the observed anti-proliferative phenotype. The mechanism remains a hypothesis pending orthogonal validation (e.g. kinase panel, thermal shift assay).
+        </p>
+        <div
+          class="flex flex-wrap gap-1.5"
+        >
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground font-mono text-[11px]"
+            data-slot="badge"
+          >
+            PMID 19297344
+          </span>
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground font-mono text-[11px]"
+            data-slot="badge"
+          >
+            PMID 23305402
+          </span>
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground font-mono text-[11px]"
+            data-slot="badge"
+          >
+            PMID 24824180
+          </span>
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground font-mono text-[11px]"
+            data-slot="badge"
+          >
+            PMID 31234567
+          </span>
+        </div>
+        <button
+          class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+          data-slot="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-sparkles"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            style="width: 0.85rem; height: 0.85rem;"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+            />
+            <path
+              d="M20 3v4"
+            />
+            <path
+              d="M22 5h-4"
+            />
+            <path
+              d="M4 17v2"
+            />
+            <path
+              d="M5 18H3"
+            />
+          </svg>
+          Open in Pharmacology
+        </button>
+      </div>
+    </div>
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-base flex items-center gap-2"
+          data-slot="card-title"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-book-open"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            style="width: 1rem; height: 1rem;"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 7v14"
+            />
+            <path
+              d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+            />
+          </svg>
+          Recommended experiments
+        </div>
+        <div
+          class="text-muted-foreground text-sm"
+          data-slot="card-description"
+        >
+          Orthogonal validations the platform suggests, given the open gaps above.
+        </div>
+      </div>
+      <div
+        class="px-6"
+        data-slot="card-content"
+      >
+        <ol
+          class="space-y-2 text-sm"
+        >
+          <li
+            class="flex gap-2"
+          >
+            <span
+              class="font-mono text-xs text-muted-foreground"
+            >
+              01.
+            </span>
+            <span>
+              Acquire HMBC/NOESY on the unmatched 
+              <span
+                class="font-mono"
+              >
+                m/z 165.0188
+              </span>
+               peak to localise the methoxy adduct site.
+            </span>
+          </li>
+          <li
+            class="flex gap-2"
+          >
+            <span
+              class="font-mono text-xs text-muted-foreground"
+            >
+              02.
+            </span>
+            <span>
+              Run synthetic quercetin standard under identical LC-MS conditions to confirm retention time and MS2 fragmentation pattern.
+            </span>
+          </li>
+          <li
+            class="flex gap-2"
+          >
+            <span
+              class="font-mono text-xs text-muted-foreground"
+            >
+              03.
+            </span>
+            <span>
+              Thermal shift assay on purified PI3Kα with/without quercetin to validate the binding-pose hypothesis (mechanism gap h7).
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div
+      data-slot="collapsible"
+      data-state="closed"
+    >
+      <div
+        class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+        data-slot="card"
+      >
+        <div
+          aria-expanded="false"
+          class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 cursor-pointer hover:bg-muted/30"
+          data-slot="collapsible-trigger"
+          data-state="closed"
+          type="button"
+        >
+          <div
+            class="font-semibold text-base flex items-center justify-between gap-2"
+            data-slot="card-title"
+          >
+            <span
+              class="flex items-center gap-2"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-shield-check"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                style="width: 1rem; height: 1rem;"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                />
+                <path
+                  d="m9 12 2 2 4-4"
+                />
+              </svg>
+              Provenance manifest
+            </span>
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground text-[10px]"
+              data-slot="badge"
+            >
+              expand
+            </span>
+          </div>
+          <div
+            class="text-muted-foreground text-sm"
+            data-slot="card-description"
+          >
+            Full chain of tools, model versions, and checkpoint decisions that produced this report.
+          </div>
+        </div>
+        <div
+          data-slot="collapsible-content"
+          data-state="closed"
+          hidden=""
+          id="radix-_r_4_"
+          style=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`result panel gap audit (post-frontend backend features) > renders the rich payload's top-rank evidence through the existing EvidencePanel 1`] = `
+<body
+  data-scroll-locked="1"
+  style="pointer-events: none;"
+>
+  <span
+    aria-hidden="true"
+    data-aria-hidden="true"
+    data-radix-focus-guard=""
+    style="outline: none; opacity: 0; position: fixed; pointer-events: none;"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    data-aria-hidden="true"
+  >
+    <span
+      aria-label="Verdict: Tentative. Most features match a reference, but at least one unexplained peak remains. Report as 'putatively identified' and recommend confirmatory experiment."
+      class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200 text-[11px] gap-1.5 font-medium"
+      data-slot="tooltip-trigger"
+      data-state="closed"
+      role="status"
+    >
+      <span
+        aria-hidden="true"
+        class="inline-block h-1.5 w-1.5 rounded-full bg-amber-500"
+      />
+      <span>
+        Tentative
+      </span>
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-circle-question-mark opacity-60"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        style="width: 0.75rem; height: 0.75rem;"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+        />
+        <path
+          d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+        />
+        <path
+          d="M12 17h.01"
+        />
+      </svg>
+    </span>
+  </div>
+  <div
+    aria-hidden="true"
+    class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"
+    data-aria-hidden="true"
+    data-slot="sheet-overlay"
+    data-state="open"
+    style="pointer-events: auto;"
+  />
+  <div
+    aria-describedby="ep-desc radix-_r_8_"
+    aria-labelledby="radix-_r_7_"
+    class="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full border-l w-full sm:max-w-lg md:max-w-xl flex flex-col gap-0 p-0"
+    data-slot="sheet-content"
+    data-state="open"
+    id="radix-_r_6_"
+    role="dialog"
+    style="pointer-events: auto;"
+    tabindex="-1"
+  >
+    <div
+      class="flex flex-col gap-1.5 border-b p-4"
+      data-slot="sheet-header"
+    >
+      <div
+        class="flex items-center gap-2 pr-8"
+      >
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-network text-muted-foreground shrink-0"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          style="width: 1rem; height: 1rem;"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            height="6"
+            rx="1"
+            width="6"
+            x="16"
+            y="16"
+          />
+          <rect
+            height="6"
+            rx="1"
+            width="6"
+            x="2"
+            y="16"
+          />
+          <rect
+            height="6"
+            rx="1"
+            width="6"
+            x="9"
+            y="2"
+          />
+          <path
+            d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"
+          />
+          <path
+            d="M12 12V8"
+          />
+        </svg>
+        <h2
+          class="text-foreground font-semibold text-base leading-tight"
+          data-slot="sheet-title"
+          id="radix-_r_7_"
+        >
+          isoquercitrin — evidence
+        </h2>
+      </div>
+      <p
+        class="text-muted-foreground text-sm"
+        data-slot="sheet-description"
+        id="ep-desc"
+      >
+        score 0.6175 · chain rt → uv → purity → pharmacopoeial_markers
+      </p>
+    </div>
+    <div
+      aria-label="Evidence panel body"
+      class="relative flex-1"
+      data-slot="scroll-area"
+      dir="ltr"
+      style="position: relative; --radix-scroll-area-corner-width: 0px; --radix-scroll-area-corner-height: 0px;"
+    >
+      <style>
+        [data-radix-scroll-area-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-scroll-area-viewport]::-webkit-scrollbar{display:none}
+      </style>
+      <div
+        class="focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+        data-radix-scroll-area-viewport=""
+        data-slot="scroll-area-viewport"
+        style="overflow-x: hidden; overflow-y: scroll;"
+      >
+        <div
+          style="min-width: 100%; display: table;"
+        >
+          <div
+            class="space-y-5 p-4"
+          >
+            <section
+              aria-labelledby="ep-graph"
+            >
+              <h3
+                class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+                id="ep-graph"
+              >
+                Evidence graph
+              </h3>
+              <div
+                class="rounded-lg border bg-muted/30 p-2"
+              >
+                <svg
+                  aria-label="Evidence graph with 10 claims and 9 relations"
+                  class="w-full"
+                  role="img"
+                  style="max-height: 260px;"
+                  viewBox="0 0 280 220"
+                >
+                  <g>
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="192.90067270632258"
+                      x2="140"
+                      y1="37.18847050625473"
+                      y2="20"
+                    />
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="225.59508646656383"
+                      x2="140"
+                      y1="82.18847050625473"
+                      y2="20"
+                    />
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="225.59508646656383"
+                      x2="140"
+                      y1="137.81152949374527"
+                      y2="20"
+                    />
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="192.90067270632258"
+                      x2="140"
+                      y1="182.81152949374527"
+                      y2="20"
+                    />
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="140"
+                      x2="140"
+                      y1="200"
+                      y2="20"
+                    />
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="87.09932729367742"
+                      x2="140"
+                      y1="182.81152949374527"
+                      y2="20"
+                    />
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="54.404913533436186"
+                      x2="140"
+                      y1="137.81152949374527"
+                      y2="20"
+                    />
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="54.40491353343617"
+                      x2="140"
+                      y1="82.18847050625475"
+                      y2="20"
+                    />
+                    <line
+                      opacity="0.75"
+                      stroke="#94a3b8"
+                      stroke-width="1.2"
+                      x1="87.0993272936774"
+                      x2="140"
+                      y1="37.188470506254745"
+                      y2="20"
+                    />
+                  </g>
+                  <g>
+                    <g
+                      aria-describedby="radix-_r_9_"
+                      aria-label="observation: identity: isoquercitrin"
+                      class="cursor-help"
+                      data-radix-popper-align="center"
+                      data-radix-popper-side="top"
+                      data-slot="tooltip-trigger"
+                      data-state="instant-open"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="140"
+                        cy="20"
+                        fill="#10b981"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: matched:mock: fixture spectral distance (source observed:mock, strength 0.73)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="192.90067270632258"
+                        cy="37.18847050625473"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: isolation_polarity: elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted polar -- consistent with (source isolation:fractions, strength 0.1125)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="225.59508646656383"
+                        cy="82.18847050625473"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: isolation_tlc_class: TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavonol'] (of ['aromatic', 'flavonoid', 'flavonol', 'phenolic', 'triterpene']) (source isolation:TLC, strength 0.2)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="225.59508646656383"
+                        cy="137.81152949374527"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: isolation_flash_uv: flash lambda-max 370.0 nm inside the candidate's flavonol chromophore band 340-390 nm (source isolation:flash_uv, strength 0.15)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="192.90067270632258"
+                        cy="182.81152949374527"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: rt_prediction_far: predicted 3.00 min vs observed 9.90 min (source retention_model, strength 0.25)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="140"
+                        cy="200"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: uv_chromophore_match: observed flavonol (confidence 0.95); candidate classes: flavonol, flavone (source classifier:uv_chromophore, strength 0.2)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="87.09932729367742"
+                        cy="182.81152949374527"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: pharmacopoeial_marker_match: marker curcumin: RT in range=False, UV in range=True (expected RT 14.5-15.8 min) (source pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm), strength 0.3)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="54.404913533436186"
+                        cy="137.81152949374527"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: pharmacopoeial_marker_match: marker demethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.2-16.6 min) (source pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph, strength 0.3)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="54.40491353343617"
+                        cy="82.18847050625475"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                    <g
+                      aria-label="match: pharmacopoeial_marker_match: marker bisdemethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.9-17.5 min) (source pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph, strength 0.3)"
+                      class="cursor-help"
+                      data-slot="tooltip-trigger"
+                      data-state="closed"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <circle
+                        cx="87.0993272936774"
+                        cy="37.188470506254745"
+                        fill="#8b5cf6"
+                        r="8"
+                        stroke="#fff"
+                        stroke-width="1.5"
+                      />
+                    </g>
+                  </g>
+                </svg>
+              </div>
+              <ul
+                class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground"
+              >
+                <li
+                  class="flex items-center gap-1"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="inline-block h-2 w-2 rounded-full"
+                    style="background-color: rgb(16, 185, 129); border: 1.5px solid rgb(16, 185, 129);"
+                  />
+                  Observation
+                </li>
+                <li
+                  class="flex items-center gap-1"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="inline-block h-2 w-2 rounded-full"
+                    style="background-color: rgb(99, 102, 241); border: 1.5px solid rgb(99, 102, 241);"
+                  />
+                  Prediction
+                </li>
+                <li
+                  class="flex items-center gap-1"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="inline-block h-2 w-2 rounded-full"
+                    style="background-color: rgb(139, 92, 246); border: 1.5px solid rgb(139, 92, 246);"
+                  />
+                  Match
+                </li>
+                <li
+                  class="flex items-center gap-1"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="inline-block h-2 w-2 rounded-full"
+                    style="background-color: transparent; border: 1.5px dashed rgb(249, 115, 22);"
+                  />
+                  Gap
+                </li>
+              </ul>
+            </section>
+            <section
+              aria-labelledby="ep-support"
+            >
+              <h3
+                class="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400"
+                id="ep-support"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-circle-check"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  style="width: 0.85rem; height: 0.85rem;"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  />
+                  <path
+                    d="m9 12 2 2 4-4"
+                  />
+                </svg>
+                Supporting features (
+                10
+                )
+              </h3>
+              <ul
+                class="space-y-1.5 text-sm"
+              >
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    observation
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    identity: isoquercitrin
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    matched:mock: fixture spectral distance (source observed:mock, strength 0.73)
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    isolation_polarity: elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -&gt; polar; candidate predicted polar -- consistent with (source isolation:fractions, strength 0.1125)
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    isolation_tlc_class: TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavonol'] (of ['aromatic', 'flavonoid', 'flavonol', 'phenolic', 'triterpene']) (source isolation:TLC, strength 0.2)
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    isolation_flash_uv: flash lambda-max 370.0 nm inside the candidate's flavonol chromophore band 340-390 nm (source isolation:flash_uv, strength 0.15)
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    rt_prediction_far: predicted 3.00 min vs observed 9.90 min (source retention_model, strength 0.25)
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    uv_chromophore_match: observed flavonol (confidence 0.95); candidate classes: flavonol, flavone (source classifier:uv_chromophore, strength 0.2)
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    pharmacopoeial_marker_match: marker curcumin: RT in range=False, UV in range=True (expected RT 14.5-15.8 min) (source pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm), strength 0.3)
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    pharmacopoeial_marker_match: marker demethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.2-16.6 min) (source pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph, strength 0.3)
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50/50 px-2.5 py-1.5 dark:border-emerald-900 dark:bg-emerald-950/40"
+                >
+                  <span
+                    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 shrink-0 border-emerald-200 bg-emerald-100 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 text-[10px]"
+                    data-slot="badge"
+                  >
+                    match
+                  </span>
+                  <span
+                    class="leading-snug"
+                  >
+                    pharmacopoeial_marker_match: marker bisdemethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.9-17.5 min) (source pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph, strength 0.3)
+                  </span>
+                </li>
+              </ul>
+            </section>
+            <section
+              aria-labelledby="ep-gaps"
+            >
+              <h3
+                class="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-orange-700 dark:text-orange-400"
+                id="ep-gaps"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-triangle-alert"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  style="width: 0.85rem; height: 0.85rem;"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+                  />
+                  <path
+                    d="M12 9v4"
+                  />
+                  <path
+                    d="M12 17h.01"
+                  />
+                </svg>
+                Gaps (
+                0
+                )
+              </h3>
+              <p
+                class="text-xs text-muted-foreground"
+              >
+                No gaps in this evidence chain.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none"
+      type="button"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-x size-4"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18 6 6 18"
+        />
+        <path
+          d="m6 6 12 12"
+        />
+      </svg>
+      <span
+        class="sr-only"
+      >
+        Close
+      </span>
+    </button>
+  </div>
+  <span
+    aria-hidden="true"
+    data-aria-hidden="true"
+    data-radix-focus-guard=""
+    style="outline: none; opacity: 0; position: fixed; pointer-events: none;"
+    tabindex="0"
+  />
+  <div
+    data-radix-popper-content-wrapper=""
+    style="position: fixed; left: 0px; top: 0px; transform: translate(0, -200%); min-width: max-content; z-index: auto;"
+  >
+    <div
+      class="bg-primary text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-xs text-balance max-w-[240px] text-left"
+      data-align="center"
+      data-side="top"
+      data-slot="tooltip-content"
+      data-state="instant-open"
+      id="radix-_r_9_"
+      role="tooltip"
+      style="pointer-events: auto; --radix-tooltip-content-transform-origin: var(--radix-popper-transform-origin); --radix-tooltip-content-available-width: var(--radix-popper-available-width); --radix-tooltip-content-available-height: var(--radix-popper-available-height); --radix-tooltip-trigger-width: var(--radix-popper-anchor-width); --radix-tooltip-trigger-height: var(--radix-popper-anchor-height); animation: none;"
+    >
+      <div
+        class="space-y-1 text-xs"
+      >
+        <div
+          class="font-semibold uppercase tracking-wide text-[10px]"
+        >
+          observation
+        </div>
+        <div
+          class="font-normal"
+        >
+          identity: isoquercitrin
+        </div>
+        <div
+          class="text-muted-foreground"
+        >
+          confidence: 
+          0.50
+        </div>
+      </div>
+      <span
+        style="position: absolute; bottom: 0px; transform: translateY(100%); visibility: hidden;"
+      >
+        <svg
+          class="bg-primary fill-primary z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]"
+          height="5"
+          preserveAspectRatio="none"
+          style="display: block;"
+          viewBox="0 0 30 10"
+          width="10"
+        >
+          <polygon
+            points="0,0 30,0 15,10"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`result panel gap audit (post-frontend backend features) > shows the fixture's summary-level report lines are not rendered anywhere > summary-lines-absence 1`] = `
+<div>
+  <div
+    class="space-y-6"
+  >
+    <div
+      class="flex flex-col gap-2 border-b pb-4 md:flex-row md:items-end md:justify-between"
+    >
+      <div
+        class="min-w-0 space-y-1"
+      >
+        <div
+          class="text-[11px] font-medium uppercase tracking-wider text-muted-foreground"
+        >
+          Report · run run_4a7e9c2b
+        </div>
+        <h1
+          class="text-2xl font-semibold tracking-tight"
+        >
+          Assembled report
+        </h1>
+        <p
+          class="text-sm text-muted-foreground max-w-2xl"
+        >
+          A single, citation-bearing document you can hand to a reviewer. The mechanism section carries its disclaimer at the top; the provenance manifest is collapsible but never deleted.
+        </p>
+      </div>
+      <div
+        class="flex items-center gap-2"
+      >
+        <div
+          class="flex gap-2"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+            data-slot="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-download"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.85rem; height: 0.85rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 15V3"
+              />
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+              />
+              <path
+                d="m7 10 5 5 5-5"
+              />
+            </svg>
+            JSON
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+            data-slot="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-download"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.85rem; height: 0.85rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 15V3"
+              />
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+              />
+              <path
+                d="m7 10 5 5 5-5"
+              />
+            </svg>
+            CSV
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+            data-slot="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-download"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.85rem; height: 0.85rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 15V3"
+              />
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+              />
+              <path
+                d="m7 10 5 5 5-5"
+              />
+            </svg>
+            SDF
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+            data-slot="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-file-text"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.85rem; height: 0.85rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+              />
+              <path
+                d="M14 2v4a2 2 0 0 0 2 2h4"
+              />
+              <path
+                d="M10 9H8"
+              />
+              <path
+                d="M16 13H8"
+              />
+              <path
+                d="M16 17H8"
+              />
+            </svg>
+            PDF
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-base"
+          data-slot="card-title"
+        >
+          Sample summary
+        </div>
+      </div>
+      <div
+        class="px-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-xs"
+        data-slot="card-content"
+      >
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Species
+          </div>
+          <div
+            class="mt-0.5 text-sm"
+          >
+            Camellia sinensis
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Part
+          </div>
+          <div
+            class="mt-0.5 text-sm"
+          >
+            leaf
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Extraction
+          </div>
+          <div
+            class="mt-0.5 text-sm"
+          >
+            maceration, EtOH/H2O 7:3
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Workflow
+          </div>
+          <div
+            class="mt-0.5 text-sm"
+          >
+            identify
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Model version
+          </div>
+          <div
+            class="mt-0.5 font-mono text-sm"
+          >
+            phyto-orchestrator-v0.4.2
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Tokens used
+          </div>
+          <div
+            class="mt-0.5 font-mono text-sm"
+          >
+            15
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Run ID
+          </div>
+          <div
+            class="mt-0.5 font-mono text-sm"
+          >
+            run_4a7e9c2b
+          </div>
+        </div>
+        <div
+          class="rounded-md border bg-muted/30 p-2.5"
+        >
+          <div
+            class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+          >
+            Verdict
+          </div>
+          <div
+            class="mt-0.5 font-mono text-sm"
+          >
+            —
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-base flex items-center justify-between gap-2"
+          data-slot="card-title"
+        >
+          <span
+            class="flex items-center gap-2"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-flask-conical"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 1rem; height: 1rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"
+              />
+              <path
+                d="M6.453 15h11.094"
+              />
+              <path
+                d="M8.5 2h7"
+              />
+            </svg>
+            Top candidate
+          </span>
+          <span
+            aria-label="Verdict: Confirmed. Multiple independent spectral features match a reference at the species level. Suitable for publication as an identification (subject to reviewer sign-off)."
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden [a&]:hover:bg-primary/90 border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200 text-[11px] gap-1.5 font-medium"
+            data-slot="tooltip-trigger"
+            data-state="closed"
+            role="status"
+          >
+            <span
+              aria-hidden="true"
+              class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"
+            />
+            <span>
+              Confirmed
+            </span>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-question-mark opacity-60"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              style="width: 0.75rem; height: 0.75rem;"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+              />
+              <path
+                d="M12 17h.01"
+              />
+            </svg>
+          </span>
+        </div>
+        <div
+          class="text-muted-foreground text-sm"
+          data-slot="card-description"
+        >
+          Quercetin
+           · 
+          C15H10O7
+           · 
+          302.0427
+        </div>
+      </div>
+      <div
+        class="px-6 grid gap-6 lg:grid-cols-2"
+        data-slot="card-content"
+      >
+        <div
+          class="space-y-3 text-sm"
+        >
+          <div
+            class="grid grid-cols-3 gap-2 text-xs"
+          >
+            <div
+              class="rounded-md border bg-muted/30 p-2 text-center"
+            >
+              <div
+                class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+              >
+                Score
+              </div>
+              <div
+                class="font-mono text-sm tabular-nums"
+              >
+                0.91
+              </div>
+            </div>
+            <div
+              class="rounded-md border bg-muted/30 p-2 text-center"
+            >
+              <div
+                class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+              >
+                Coverage
+              </div>
+              <div
+                class="font-mono text-sm tabular-nums"
+              >
+                88%
+              </div>
+            </div>
+            <div
+              class="rounded-md border bg-muted/30 p-2 text-center"
+            >
+              <div
+                class="text-[10px] font-medium uppercase tracking-wide text-muted-foreground"
+              >
+                Margin
+              </div>
+              <div
+                class="font-mono text-sm tabular-nums"
+              >
+                12%
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1"
+            >
+              Source
+            </div>
+            <div
+              class="font-mono text-xs"
+            >
+              LOTUS_isolate_4127
+            </div>
+          </div>
+          <div>
+            <div
+              class="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1"
+            >
+              Open gaps
+            </div>
+            <ul
+              class="space-y-1 text-xs"
+            >
+              <li
+                class="flex items-start gap-1.5 rounded-md border border-orange-200 bg-orange-50/50 px-2 py-1 dark:border-orange-900 dark:bg-orange-950/40"
+              >
+                <span
+                  class="text-orange-600 dark:text-orange-400"
+                >
+                  ⚠
+                </span>
+                <span>
+                  Unmatched observed peak at m/z 165.0188 — possible methoxy adduct
+                </span>
+              </li>
+              <li
+                class="flex items-start gap-1.5 rounded-md border border-orange-200 bg-orange-50/50 px-2 py-1 dark:border-orange-900 dark:bg-orange-950/40"
+              >
+                <span
+                  class="text-orange-600 dark:text-orange-400"
+                >
+                  ⚠
+                </span>
+                <span>
+                  Unmatched predicted peak at m/z 121.0284 — low-abundance, may be below noise floor
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div
+            class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm p-3"
+            data-slot="card"
+          >
+            <div
+              class="flex flex-col gap-2 w-full"
+              data-orientation="horizontal"
+              data-slot="tabs"
+              dir="ltr"
+            >
+              <div
+                aria-orientation="horizontal"
+                class="bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]"
+                data-orientation="horizontal"
+                data-slot="tabs-list"
+                role="tablist"
+                style="outline: none;"
+                tabindex="0"
+              >
+                <button
+                  aria-controls="radix-_r_p_-content-ms2"
+                  aria-selected="true"
+                  class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+                  data-orientation="horizontal"
+                  data-radix-collection-item=""
+                  data-slot="tabs-trigger"
+                  data-state="active"
+                  id="radix-_r_p_-trigger-ms2"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  MS2 mirror
+                </button>
+                <button
+                  aria-controls="radix-_r_p_-content-hsqc"
+                  aria-selected="false"
+                  class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+                  data-orientation="horizontal"
+                  data-radix-collection-item=""
+                  data-slot="tabs-trigger"
+                  data-state="inactive"
+                  id="radix-_r_p_-trigger-hsqc"
+                  role="tab"
+                  tabindex="-1"
+                  type="button"
+                >
+                  HSQC overlay
+                </button>
+              </div>
+              <div
+                aria-labelledby="radix-_r_p_-trigger-ms2"
+                class="flex-1 outline-none mt-2"
+                data-orientation="horizontal"
+                data-slot="tabs-content"
+                data-state="active"
+                id="radix-_r_p_-content-ms2"
+                role="tabpanel"
+                style="animation-duration: 0s;"
+                tabindex="0"
+              >
+                <div
+                  class="space-y-2"
+                >
+                  <div
+                    class="flex items-center gap-3 text-xs text-muted-foreground"
+                  >
+                    <span
+                      class="flex items-center gap-1"
+                    >
+                      <span
+                        class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+                      />
+                      observed
+                    </span>
+                    <span
+                      class="flex items-center gap-1"
+                    >
+                      <span
+                        class="inline-block h-2 w-2 rounded-full bg-indigo-500"
+                      />
+                      predicted (mirrored)
+                    </span>
+                    <span
+                      class="flex items-center gap-1"
+                    >
+                      <span
+                        class="inline-block h-2 w-2 rounded-full bg-orange-500"
+                      />
+                      unmatched (gap)
+                    </span>
+                  </div>
+                  <div
+                    style="width: 100%; height: 220px;"
+                  >
+                    <div
+                      class="recharts-responsive-container"
+                      style="width: 100%; height: 100%; min-width: 0px;"
+                    />
+                  </div>
+                  <p
+                    class="text-xs text-muted-foreground"
+                  >
+                    Orange peaks in the observed trace have no predicted counterpart (gaps). Indigo peaks in the predicted trace have no observed counterpart.
+                  </p>
+                </div>
+              </div>
+              <div
+                aria-labelledby="radix-_r_p_-trigger-hsqc"
+                class="flex-1 outline-none mt-2"
+                data-orientation="horizontal"
+                data-slot="tabs-content"
+                data-state="inactive"
+                hidden=""
+                id="radix-_r_p_-content-hsqc"
+                role="tabpanel"
+                tabindex="0"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-base flex items-center gap-2"
+          data-slot="card-title"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-network"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            style="width: 1rem; height: 1rem;"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              height="6"
+              rx="1"
+              width="6"
+              x="16"
+              y="16"
+            />
+            <rect
+              height="6"
+              rx="1"
+              width="6"
+              x="2"
+              y="16"
+            />
+            <rect
+              height="6"
+              rx="1"
+              width="6"
+              x="9"
+              y="2"
+            />
+            <path
+              d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"
+            />
+            <path
+              d="M12 12V8"
+            />
+          </svg>
+          Mechanism hypothesis
+        </div>
+        <div
+          class="text-muted-foreground text-sm"
+          data-slot="card-description"
+        >
+          For 
+          Quercetin
+          . Confidence 
+          0.62
+          .
+        </div>
+      </div>
+      <div
+        class="px-6 space-y-4"
+        data-slot="card-content"
+      >
+        <div
+          aria-label="HYPOTHESIS (computational, not experimental)"
+          class="flex gap-3 rounded-lg border px-4 py-3 text-sm leading-snug border-orange-300 bg-orange-50 text-orange-950 dark:border-orange-800 dark:bg-orange-950/60 dark:text-orange-100"
+          role="note"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-triangle-alert mt-0.5 shrink-0"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            style="width: 1.1rem; height: 1.1rem;"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+            />
+            <path
+              d="M12 9v4"
+            />
+            <path
+              d="M12 17h.01"
+            />
+          </svg>
+          <div
+            class="space-y-0.5"
+          >
+            <div
+              class="font-semibold tracking-wide uppercase text-[11px]"
+            >
+              HYPOTHESIS (computational, not experimental)
+            </div>
+            <div
+              class="text-[13px] font-normal leading-relaxed"
+            >
+              The mechanism section below is an LLM-generated synthesis of literature and docking predictions. It is a starting point for experimental design — not a claim, not an identification.
+            </div>
+          </div>
+        </div>
+        <p
+          class="text-sm leading-relaxed"
+        >
+          Quercetin is hypothesised to inhibit PI3K/Akt signalling upstream of mTORC1, partially via direct binding to the ATP-binding pocket of PI3Kα (predicted docking score −9.2 kcal/mol, 3 out of 4 supporting studies concordant). Concurrent inhibition of the NF-κB axis (p65 translocation reduced 38% in 2 of 3 cited cell models) suggests a polypharmacology profile consistent with the observed anti-proliferative phenotype. The mechanism remains a hypothesis pending orthogonal validation (e.g. kinase panel, thermal shift assay).
+        </p>
+        <div
+          class="flex flex-wrap gap-1.5"
+        >
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground font-mono text-[11px]"
+            data-slot="badge"
+          >
+            PMID 19297344
+          </span>
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground font-mono text-[11px]"
+            data-slot="badge"
+          >
+            PMID 23305402
+          </span>
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground font-mono text-[11px]"
+            data-slot="badge"
+          >
+            PMID 24824180
+          </span>
+          <span
+            class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground font-mono text-[11px]"
+            data-slot="badge"
+          >
+            PMID 31234567
+          </span>
+        </div>
+        <button
+          class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md px-3 has-[>svg]:px-2.5 gap-1.5"
+          data-slot="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-sparkles"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            style="width: 0.85rem; height: 0.85rem;"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+            />
+            <path
+              d="M20 3v4"
+            />
+            <path
+              d="M22 5h-4"
+            />
+            <path
+              d="M4 17v2"
+            />
+            <path
+              d="M5 18H3"
+            />
+          </svg>
+          Open in Pharmacology
+        </button>
+      </div>
+    </div>
+    <div
+      class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+      data-slot="card"
+    >
+      <div
+        class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+        data-slot="card-header"
+      >
+        <div
+          class="font-semibold text-base flex items-center gap-2"
+          data-slot="card-title"
+        >
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-book-open"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            style="width: 1rem; height: 1rem;"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 7v14"
+            />
+            <path
+              d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+            />
+          </svg>
+          Recommended experiments
+        </div>
+        <div
+          class="text-muted-foreground text-sm"
+          data-slot="card-description"
+        >
+          Orthogonal validations the platform suggests, given the open gaps above.
+        </div>
+      </div>
+      <div
+        class="px-6"
+        data-slot="card-content"
+      >
+        <ol
+          class="space-y-2 text-sm"
+        >
+          <li
+            class="flex gap-2"
+          >
+            <span
+              class="font-mono text-xs text-muted-foreground"
+            >
+              01.
+            </span>
+            <span>
+              Acquire HMBC/NOESY on the unmatched 
+              <span
+                class="font-mono"
+              >
+                m/z 165.0188
+              </span>
+               peak to localise the methoxy adduct site.
+            </span>
+          </li>
+          <li
+            class="flex gap-2"
+          >
+            <span
+              class="font-mono text-xs text-muted-foreground"
+            >
+              02.
+            </span>
+            <span>
+              Run synthetic quercetin standard under identical LC-MS conditions to confirm retention time and MS2 fragmentation pattern.
+            </span>
+          </li>
+          <li
+            class="flex gap-2"
+          >
+            <span
+              class="font-mono text-xs text-muted-foreground"
+            >
+              03.
+            </span>
+            <span>
+              Thermal shift assay on purified PI3Kα with/without quercetin to validate the binding-pose hypothesis (mechanism gap h7).
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div
+      data-slot="collapsible"
+      data-state="closed"
+    >
+      <div
+        class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm"
+        data-slot="card"
+      >
+        <div
+          aria-expanded="false"
+          class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 cursor-pointer hover:bg-muted/30"
+          data-slot="collapsible-trigger"
+          data-state="closed"
+          type="button"
+        >
+          <div
+            class="font-semibold text-base flex items-center justify-between gap-2"
+            data-slot="card-title"
+          >
+            <span
+              class="flex items-center gap-2"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-shield-check"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                style="width: 1rem; height: 1rem;"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                />
+                <path
+                  d="m9 12 2 2 4-4"
+                />
+              </svg>
+              Provenance manifest
+            </span>
+            <span
+              class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground text-[10px]"
+              data-slot="badge"
+            >
+              expand
+            </span>
+          </div>
+          <div
+            class="text-muted-foreground text-sm"
+            data-slot="card-description"
+          >
+            Full chain of tools, model versions, and checkpoint decisions that produced this report.
+          </div>
+        </div>
+        <div
+          data-slot="collapsible-content"
+          data-state="closed"
+          hidden=""
+          id="radix-_r_s_"
+          style=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
