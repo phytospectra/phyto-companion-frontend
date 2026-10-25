@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatRankInterval } from "@/lib/phyto/formatting";
+import { formatRankInterval, formatMargin } from "@/lib/phyto/formatting";
 import type { CandidateRank } from "@/lib/phyto/types";
 import { cn } from "@/lib/utils";
 
@@ -26,8 +26,23 @@ interface UncertaintyBadgeProps {
 }
 
 export function UncertaintyBadge({ rank, className }: UncertaintyBadgeProps) {
-  const isTie = rank.tied_candidates > 0;
-  const marginPct = Math.round(rank.margin * 100);
+  // Backend ties are candidate ids (list[str]); a small margin warning
+  // applies only to a finite margin (null means "no distinct competitor").
+  const nTied = Array.isArray(rank.tied_candidates)
+    ? rank.tied_candidates.length
+    : 0;
+  const isTie = nTied > 0;
+  const marginPct =
+    rank.margin === null || rank.margin === undefined
+      ? null
+      : Number.isFinite(rank.margin)
+        ? Math.round(rank.margin * 100)
+        : null;
+  const smallMargin =
+    rank.margin !== null &&
+    rank.margin !== undefined &&
+    Number.isFinite(rank.margin) &&
+    rank.margin < 0.05;
 
   return (
     <div className={cn("flex flex-wrap items-center gap-1.5", className)}>
@@ -57,8 +72,8 @@ export function UncertaintyBadge({ rank, className }: UncertaintyBadgeProps) {
               {rank.ranking_interval[0]}, worst case is{" "}
               {rank.ranking_interval[1]}.
               {isTie
-                ? ` Tied with ${rank.tied_candidates} other candidate${
-                    rank.tied_candidates === 1 ? "" : "s"
+                ? ` Tied with ${nTied} other candidate${
+                    nTied === 1 ? "" : "s"
                   } — the system cannot break the tie from current evidence.`
                 : " No tie at this rank."}
             </div>
@@ -66,7 +81,7 @@ export function UncertaintyBadge({ rank, className }: UncertaintyBadgeProps) {
         </TooltipContent>
       </Tooltip>
 
-      {rank.margin < 0.05 && (
+      {smallMargin && (
         <Tooltip>
           <TooltipTrigger asChild>
             <span
@@ -77,7 +92,7 @@ export function UncertaintyBadge({ rank, className }: UncertaintyBadgeProps) {
                 aria-hidden="true"
                 style={{ width: "0.7rem", height: "0.7rem" }}
               />
-              <span>margin {marginPct}%</span>
+              <span>margin {marginPct === null ? "∞" : `${marginPct}%`}</span>
             </span>
           </TooltipTrigger>
           <TooltipContent side="top" className="max-w-[260px] text-left">

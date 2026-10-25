@@ -32,7 +32,12 @@ export interface Candidate {
   id: string;
   name: string;
   smiles: string;
-  formula: string;
+  /**
+   * Elemental composition. Mirrors the backend's MolecularFormula
+   * (shared/phyto_shared/models.py): `counts` maps element symbol → integer
+   * count >= 1, Hill-notation str() gives the display form.
+   */
+  formula: { counts: Record<string, number> };
   exact_mass: number;
   provenance: "experimental" | "predicted" | "synthetic" | "structure_only";
   source: string;
@@ -60,13 +65,13 @@ export interface CandidateRank {
   candidate: Candidate;
   score: number;
   coverage: number;
-  margin: number;
+  margin: number | null;
   /** [best_rank, worst_rank] — the rank is an interval, not a point. */
   ranking_interval: [number, number];
   ranking_convention: "higher_is_better" | "lower_is_better";
   verdict: Verdict;
-  /** Number of other candidates tied at this rank. */
-  tied_candidates: number;
+  /** Candidate ids statistically tied with this one (backend: list[str]). */
+  tied_candidates: string[];
   evidence_graph?: EvidenceGraph;
   gaps: string[];
 }

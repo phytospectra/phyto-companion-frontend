@@ -44,6 +44,56 @@ export function formatPercent(ratio: number): string {
 }
 
 /**
+ * Format a candidate's margin for display.
+ *
+ * The backend's margin is `float | None` and may be infinite when there is
+ * no distinct competitor (shared/phyto_shared/models.py CandidateRank.margin).
+ * Renders "—" for null/undefined and "∞" for ±Infinity — never "NaN%".
+ */
+export function formatMargin(margin: number | null | undefined): string {
+  if (margin === null || margin === undefined) return "—";
+  if (!Number.isFinite(margin)) return margin > 0 ? "∞" : "-∞";
+  return formatPercent(margin);
+}
+
+/**
+ * Render a MolecularFormula (backend shape: {counts: Record<string, number>})
+ * in Hill notation: C first, H second, remaining elements alphabetical;
+ * counts of 1 are omitted. Mirrors MolecularFormula.__str__ so the FE and BE
+ * render identical strings, e.g. {"C":15,"H":10,"O":7} → "C15H10O7".
+ */
+export function formatFormula(
+  formula: { counts: Record<string, number> } | string | null | undefined
+): string {
+  if (!formula) return "—";
+  if (typeof formula === "string") return formula;
+  const { counts } = formula;
+  const keys = Object.keys(counts);
+  const order =
+    "C" in counts
+      ? [
+          "C",
+          ...("H" in counts ? ["H"] : []),
+          ...keys.filter((k) => k !== "C" && k !== "H").sort(),
+        ]
+      : keys.sort();
+  return order
+    .map((el) => (counts[el] === 1 ? el : `${el}${counts[el]}`))
+    .join("");
+}
+
+/**
+ * True when a MolecularFormula's Hill-notation string contains `q`
+ * (case-insensitive) — used by free-text candidate search.
+ */
+export function formulaMatches(
+  formula: { counts: Record<string, number> } | string | null | undefined,
+  q: string
+): boolean {
+  return formatFormula(formula).toLowerCase().includes(q.toLowerCase());
+}
+
+/**
  * Format a signed token delta for the transactions table.
  *   formatSignedTokens(-5)  → "-5"
  *   formatSignedTokens(100) → "+100"
@@ -100,8 +150,13 @@ export function formatRankInterval(rank: CandidateRank): string {
   const [best, worst] = rank.ranking_interval;
   const arrow = rank.ranking_convention === "higher_is_better" ? "↑ " : "";
   if (best === worst) {
-    if (rank.tied_candidates > 0) {
-      return `${arrow}Rank ${best} (tied with ${rank.tied_candidates})`;
+    // Backend ties are candidate ids (list[str]); fall back to the legacy
+    // numeric count so mock-era payloads keep rendering.
+    const nTied = Array.isArray(rank.tied_candidates)
+      ? rank.tied_candidates.length
+      : 0;
+    if (nTied > 0) {
+      return `${arrow}Rank ${best} (tied with ${nTied})`;
     }
     return `${arrow}Rank ${best}`;
   }

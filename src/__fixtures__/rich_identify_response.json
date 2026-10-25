@@ -1,0 +1,1523 @@
+{
+  "_capture_note": "Gap-audit fixture (2026-10-22): rich identify dry-run through the orchestrator local plane with every chromatography layer's metadata, a seeded isolation record, taxon metadata and UV/RT/purity inputs. Sections: analysis_response (POST /analysis), run_status (GET /runs/{id}), citation, task_outputs (the ranks each layer's task produced \u2014 the data a result panel renders). NOTE: in the dry-run the apply-chromatography-layers task received zero ranks (it ran before elucidate), so the section layer_chain_over_ranks additionally runs the REAL backend chain (layer_chain.apply_chromatography_layers \u2014 the exact function the layers tool calls) over the elucidate ranks with the same metadata, to expose the full CandidateRank field surface a user-facing report must render.",
+  "analysis_response": {
+    "run_id": "run-98b4da8cc981",
+    "status": "awaiting_review",
+    "provenance_manifest_id": "2a05595f2e2388e574ef2c9634261c8761c1c8df6e0ead7399d7e874fefda240",
+    "summary": {
+      "workflow": "identify",
+      "dry_run": true,
+      "task_counts": {
+        "complete": 7,
+        "awaiting_approval": 1,
+        "pending": 2
+      },
+      "awaiting_task_id": "approve-claim",
+      "cost_estimate_usd": 7.28e-05,
+      "wall_seconds": 0.2531,
+      "modalities": [
+        "c_1d",
+        "h_1d",
+        "hsqc",
+        "ms2"
+      ],
+      "pruned_tasks": [],
+      "evidence_gap": null,
+      "isolation_layer": "applied",
+      "chromatography_layers": {
+        "applied": [
+          "level1",
+          "rt",
+          "uv",
+          "pharmacopoeial_markers"
+        ],
+        "skipped": [
+          {
+            "layer": "purity",
+            "reason": "layer skipped: no metadata (peak purity inputs)"
+          }
+        ],
+        "top_candidate_msi_level": 2
+      }
+    },
+    "results_ref": null
+  },
+  "run_status": {
+    "run_id": "run-98b4da8cc981",
+    "workflow": "identify",
+    "status": "awaiting_review",
+    "awaiting_task_id": "approve-claim",
+    "failed_task_id": null,
+    "task_counts": {
+      "complete": 7,
+      "awaiting_approval": 1,
+      "pending": 2
+    },
+    "tasks": [
+      {
+        "id": "ingest-peaks",
+        "description": "Parse the uploaded peak list (ingestion)",
+        "tool": "io.parse_peak_csv",
+        "status": "complete",
+        "requires_checkpoint": null,
+        "error": null
+      },
+      {
+        "id": "load-isolation-record",
+        "description": "Load the bench isolation record (fractions, TLC, yield) for the supplied extract_id (ADR-0055)",
+        "tool": "isolation.load_record",
+        "status": "complete",
+        "requires_checkpoint": null,
+        "error": null
+      },
+      {
+        "id": "resolve-taxonomy",
+        "description": "Resolve the sample's species via the taxonomy service (GBIF, ITIS fallback)",
+        "tool": "taxonomy.resolve_species",
+        "status": "complete",
+        "requires_checkpoint": null,
+        "error": null
+      },
+      {
+        "id": "build-taxon-prior",
+        "description": "Query LOTUS/KNApSAcK/NPASS for compounds reported from the taxon",
+        "tool": "taxon_prior.build",
+        "status": "complete",
+        "requires_checkpoint": null,
+        "error": null
+      },
+      {
+        "id": "apply-chromatography-layers",
+        "description": "Run the chromatographic evidence layers (Level-1 home library match, RT/RI reranking, UV chromophore, peak purity, pharmacopoeial markers) over the ranked candidates (ADR-0061..ADR-0066)",
+        "tool": "chromatography.apply_layers",
+        "status": "complete",
+        "requires_checkpoint": null,
+        "error": null
+      },
+      {
+        "id": "elucidate",
+        "description": "Rank structural candidates against the spectra, then rerank with the chromatography layers (ADR-0061..0066), the isolation evidence (ADR-0055), the taxon prior and solvent compatibility (ADR-0052)",
+        "tool": "elucidation.rank_candidates",
+        "status": "complete",
+        "requires_checkpoint": null,
+        "error": null
+      },
+      {
+        "id": "literature-ground",
+        "description": "Search PubMed for the top candidate reported from the sample species (compound AND species)",
+        "tool": "literature.search_compound_in_species",
+        "status": "complete",
+        "requires_checkpoint": null,
+        "error": null
+      },
+      {
+        "id": "approve-claim",
+        "description": "HUMAN CHECKPOINT: review evidence (including taxon prior) before any CONFIRMED identification claim",
+        "tool": null,
+        "status": "awaiting_approval",
+        "requires_checkpoint": "before_confirmed_claim",
+        "error": null
+      },
+      {
+        "id": "confirm-identity",
+        "description": "Record the identification claim after approval",
+        "tool": null,
+        "status": "pending",
+        "requires_checkpoint": null,
+        "error": null
+      },
+      {
+        "id": "explain-result",
+        "description": "Generate a natural-language explanation of the evidence",
+        "tool": "llm.explain",
+        "status": "pending",
+        "requires_checkpoint": null,
+        "error": null
+      }
+    ],
+    "provenance_manifest_id": "2a05595f2e2388e574ef2c9634261c8761c1c8df6e0ead7399d7e874fefda240",
+    "citation": null,
+    "modalities": [
+      "c_1d",
+      "h_1d",
+      "hsqc",
+      "ms2"
+    ],
+    "pruned_tasks": [],
+    "evidence_gap": null
+  },
+  "citation": null,
+  "task_outputs": {
+    "ingest-peaks": {
+      "peaks": [
+        {
+          "peak_type": "1d",
+          "ppm": 7.26,
+          "intensity": 100.0,
+          "snr": 40.0,
+          "solvent_flag": true,
+          "review_status": "unreviewed"
+        }
+      ]
+    },
+    "load-isolation-record": {
+      "record": {
+        "record_id": null,
+        "extract_id": "EXT-2024-042",
+        "species": "Curcuma longa",
+        "plant_part": "rhizome",
+        "mass_starting_g": 120.5,
+        "extraction_solvent": "EtOH/H2O 7:3",
+        "fractions": [
+          {
+            "fraction_id": "F1",
+            "polarity_tier": "very_nonpolar",
+            "solvent": "hexane",
+            "volume_ml": null,
+            "notes": null
+          },
+          {
+            "fraction_id": "F2",
+            "polarity_tier": "mid",
+            "solvent": "EtOAc",
+            "volume_ml": null,
+            "notes": null
+          },
+          {
+            "fraction_id": "F3",
+            "polarity_tier": "polar",
+            "solvent": "MeOH/H2O 1:1",
+            "volume_ml": null,
+            "notes": null
+          }
+        ],
+        "compounds": [
+          {
+            "compound_id": "CMP-1",
+            "present_in_fractions": [
+              "F2",
+              "F3"
+            ],
+            "tlc": {
+              "rf": 0.42,
+              "solvent_system": "EtOAc:MeOH:H2O 8:2:0.5",
+              "visualization": [
+                {
+                  "reagent": "UV365",
+                  "response": "fluorescent",
+                  "color": null
+                },
+                {
+                  "reagent": "Naturstoff",
+                  "response": "positive_strong",
+                  "color": "yellow"
+                }
+              ]
+            },
+            "flash_uv_lambda_max_nm": 370.0,
+            "yield_mg": 48.2,
+            "purity": 0.91,
+            "isolation_chain": [
+              "F2",
+              "F2.3"
+            ],
+            "data_tier": "training_only",
+            "notes": null
+          }
+        ],
+        "created_at": "2026-10-22T09:35:03.717760Z",
+        "user_id": "gap-audit",
+        "collection_country": "IN",
+        "collection_permit": "PIC-2019-ABC123",
+        "abs_status": "clear"
+      }
+    },
+    "resolve-taxonomy": {
+      "resolution": {
+        "query_name": "Curcuma longa",
+        "canonical_name": "Curcuma longa",
+        "taxon_key": "2757624",
+        "rank": "SPECIES",
+        "source": "GBIF",
+        "match_type": "EXACT",
+        "lineage": {
+          "kingdom": "Plantae",
+          "phylum": "Tracheophyta",
+          "class": "Liliopsida",
+          "order": "Zingiberales",
+          "family": "Zingiberaceae",
+          "genus": "Curcuma",
+          "species": "Curcuma longa"
+        }
+      },
+      "lineage_depth": 7
+    },
+    "build-taxon-prior": {
+      "prior": {
+        "species_compounds": {
+          "VFLDPWHFBUODDF-FCXRPNKRSA-N": {
+            "compound_id": "LTS0000010",
+            "name": "curcumin",
+            "smiles": "COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O",
+            "inchikey": "VFLDPWHFBUODDF-FCXRPNKRSA-N",
+            "source_organism": "Curcuma longa",
+            "source_database": "LOTUS",
+            "source_reference": "LOTUS pilot snapshot (dereferenced export)",
+            "taxon_level": "species"
+          },
+          "HJTVQHVGMGKONQ-LUZURFALSA-N": {
+            "compound_id": "LTS0000011",
+            "name": "demethoxycurcumin",
+            "smiles": "COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)cc2)ccc1O",
+            "inchikey": "HJTVQHVGMGKONQ-LUZURFALSA-N",
+            "source_organism": "Curcuma longa",
+            "source_database": "LOTUS",
+            "source_reference": "LOTUS pilot snapshot (dereferenced export)",
+            "taxon_level": "species"
+          },
+          "CUMHNAWHVMLREG-UHFFFAOYSA-N": {
+            "compound_id": "LTS0000012",
+            "name": "ar-turmerone",
+            "smiles": "CC(C)c1cccc(C(C)=CCC(C)=O)c1",
+            "inchikey": "CUMHNAWHVMLREG-UHFFFAOYSA-N",
+            "source_organism": "Curcuma longa",
+            "source_database": "LOTUS",
+            "source_reference": "LOTUS pilot snapshot (dereferenced export)",
+            "taxon_level": "species"
+          },
+          "RTJAWHRJTWQTMS-UHFFFAOYSA-N": {
+            "compound_id": "KNApSAcK_C00005679",
+            "name": "beta-turmerone",
+            "smiles": "CC1=C(C)C(=O)CC(C1)=CCC(C)=O",
+            "inchikey": "RTJAWHRJTWQTMS-UHFFFAOYSA-N",
+            "source_organism": "Curcuma longa",
+            "source_database": "KNApSAcK",
+            "source_reference": "KNApSAcK species-metabolite core (static download, pilot snapshot)",
+            "taxon_level": "species"
+          }
+        },
+        "genus_compounds": {
+          "ASDDTGOBGORRAJ-UHFFFAOYSA-N": {
+            "compound_id": "LTS0000110",
+            "name": "germacrone",
+            "smiles": "CC(=O)C(=C)C=CC(C)=CCC(C)=C1CCC=C(C)C1",
+            "inchikey": "ASDDTGOBGORRAJ-UHFFFAOYSA-N",
+            "source_organism": "Curcuma",
+            "source_database": "LOTUS",
+            "source_reference": "LOTUS pilot snapshot: genus-level aggregate over Curcuma spp.",
+            "taxon_level": "genus"
+          }
+        },
+        "family_compounds": {
+          "VFLDPWHFBUODDF-FCXRPNKRSA-N": {
+            "compound_id": "NPASS_ID_NPA000001",
+            "name": "curcumin",
+            "smiles": "COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O",
+            "inchikey": "VFLDPWHFBUODDF-FCXRPNKRSA-N",
+            "source_organism": "Zingiberaceae",
+            "source_database": "NPASS",
+            "source_reference": "NPASS static export (pilot snapshot); originally reported from Curcuma spp.",
+            "taxon_level": "family"
+          },
+          "BJUICGMKNZDPOT-UHFFFAOYSA-N": {
+            "compound_id": "NPASS_ID_NPA000002",
+            "name": "6-gingerol",
+            "smiles": "CCCCCCC(O)CC(=O)CCc1ccc(O)c(OC)c1",
+            "inchikey": "BJUICGMKNZDPOT-UHFFFAOYSA-N",
+            "source_organism": "Zingiberaceae",
+            "source_database": "NPASS",
+            "source_reference": "NPASS static export (pilot snapshot); originally reported from Zingiber officinale",
+            "taxon_level": "family"
+          },
+          "RUUFYZAVWULMLD-UHFFFAOYSA-N": {
+            "compound_id": "NPASS_ID_NPA000003",
+            "name": "zingiberene",
+            "smiles": "CC1=CCC(C(C)C)C(C)=CCC1",
+            "inchikey": "RUUFYZAVWULMLD-UHFFFAOYSA-N",
+            "source_organism": "Zingiberaceae",
+            "source_database": "NPASS",
+            "source_reference": "NPASS static export (pilot snapshot); originally reported from Zingiber officinale",
+            "taxon_level": "family"
+          }
+        },
+        "all_reports": {
+          "VFLDPWHFBUODDF-FCXRPNKRSA-N": [
+            {
+              "compound_id": "LTS0000010",
+              "name": "curcumin",
+              "smiles": "COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O",
+              "inchikey": "VFLDPWHFBUODDF-FCXRPNKRSA-N",
+              "source_organism": "Curcuma longa",
+              "source_database": "LOTUS",
+              "source_reference": "LOTUS pilot snapshot (dereferenced export)",
+              "taxon_level": "species"
+            },
+            {
+              "compound_id": "KNApSAcK_C00005678",
+              "name": "curcumin",
+              "smiles": "COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O",
+              "inchikey": "VFLDPWHFBUODDF-FCXRPNKRSA-N",
+              "source_organism": "Curcuma longa",
+              "source_database": "KNApSAcK",
+              "source_reference": "KNApSAcK species-metabolite core (static download, pilot snapshot)",
+              "taxon_level": "species"
+            },
+            {
+              "compound_id": "NPASS_ID_NPA000001",
+              "name": "curcumin",
+              "smiles": "COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O",
+              "inchikey": "VFLDPWHFBUODDF-FCXRPNKRSA-N",
+              "source_organism": "Zingiberaceae",
+              "source_database": "NPASS",
+              "source_reference": "NPASS static export (pilot snapshot); originally reported from Curcuma spp.",
+              "taxon_level": "family"
+            }
+          ],
+          "HJTVQHVGMGKONQ-LUZURFALSA-N": [
+            {
+              "compound_id": "LTS0000011",
+              "name": "demethoxycurcumin",
+              "smiles": "COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)cc2)ccc1O",
+              "inchikey": "HJTVQHVGMGKONQ-LUZURFALSA-N",
+              "source_organism": "Curcuma longa",
+              "source_database": "LOTUS",
+              "source_reference": "LOTUS pilot snapshot (dereferenced export)",
+              "taxon_level": "species"
+            }
+          ],
+          "CUMHNAWHVMLREG-UHFFFAOYSA-N": [
+            {
+              "compound_id": "LTS0000012",
+              "name": "ar-turmerone",
+              "smiles": "CC(C)c1cccc(C(C)=CCC(C)=O)c1",
+              "inchikey": "CUMHNAWHVMLREG-UHFFFAOYSA-N",
+              "source_organism": "Curcuma longa",
+              "source_database": "LOTUS",
+              "source_reference": "LOTUS pilot snapshot (dereferenced export)",
+              "taxon_level": "species"
+            }
+          ],
+          "RTJAWHRJTWQTMS-UHFFFAOYSA-N": [
+            {
+              "compound_id": "KNApSAcK_C00005679",
+              "name": "beta-turmerone",
+              "smiles": "CC1=C(C)C(=O)CC(C1)=CCC(C)=O",
+              "inchikey": "RTJAWHRJTWQTMS-UHFFFAOYSA-N",
+              "source_organism": "Curcuma longa",
+              "source_database": "KNApSAcK",
+              "source_reference": "KNApSAcK species-metabolite core (static download, pilot snapshot)",
+              "taxon_level": "species"
+            }
+          ],
+          "ASDDTGOBGORRAJ-UHFFFAOYSA-N": [
+            {
+              "compound_id": "LTS0000110",
+              "name": "germacrone",
+              "smiles": "CC(=O)C(=C)C=CC(C)=CCC(C)=C1CCC=C(C)C1",
+              "inchikey": "ASDDTGOBGORRAJ-UHFFFAOYSA-N",
+              "source_organism": "Curcuma",
+              "source_database": "LOTUS",
+              "source_reference": "LOTUS pilot snapshot: genus-level aggregate over Curcuma spp.",
+              "taxon_level": "genus"
+            }
+          ],
+          "BJUICGMKNZDPOT-UHFFFAOYSA-N": [
+            {
+              "compound_id": "NPASS_ID_NPA000002",
+              "name": "6-gingerol",
+              "smiles": "CCCCCCC(O)CC(=O)CCc1ccc(O)c(OC)c1",
+              "inchikey": "BJUICGMKNZDPOT-UHFFFAOYSA-N",
+              "source_organism": "Zingiberaceae",
+              "source_database": "NPASS",
+              "source_reference": "NPASS static export (pilot snapshot); originally reported from Zingiber officinale",
+              "taxon_level": "family"
+            }
+          ],
+          "RUUFYZAVWULMLD-UHFFFAOYSA-N": [
+            {
+              "compound_id": "NPASS_ID_NPA000003",
+              "name": "zingiberene",
+              "smiles": "CC1=CCC(C(C)C)C(C)=CCC1",
+              "inchikey": "RUUFYZAVWULMLD-UHFFFAOYSA-N",
+              "source_organism": "Zingiberaceae",
+              "source_database": "NPASS",
+              "source_reference": "NPASS static export (pilot snapshot); originally reported from Zingiber officinale",
+              "taxon_level": "family"
+            }
+          ]
+        },
+        "resolution": {
+          "query_name": "Curcuma longa",
+          "canonical_name": "Curcuma longa",
+          "taxon_key": "2757624",
+          "rank": "SPECIES",
+          "source": "GBIF",
+          "match_type": "EXACT",
+          "lineage": {
+            "kingdom": "Plantae",
+            "phylum": "Tracheophyta",
+            "class": "Liliopsida",
+            "order": "Zingiberales",
+            "family": "Zingiberaceae",
+            "genus": "Curcuma",
+            "species": "Curcuma longa"
+          }
+        }
+      },
+      "n_species": 4,
+      "n_genus": 1,
+      "n_family": 3
+    },
+    "apply-chromatography-layers": {
+      "ranks": [],
+      "layers_applied": [
+        "level1",
+        "rt",
+        "uv",
+        "pharmacopoeial_markers"
+      ],
+      "skipped_layers": [
+        {
+          "layer": "purity",
+          "reason": "layer skipped: no metadata (peak purity inputs)"
+        }
+      ],
+      "top_candidate_name": null
+    },
+    "elucidate": {
+      "ranks": [
+        {
+          "candidate": {
+            "id": "isoquercitrin",
+            "name": "isoquercitrin",
+            "smiles": "C1=CC(=C(C=C1C2=C(C(=O)C3=C(C=C(C=C3O2)O)O)O)OC4C(C(C(C(O4)CO)O)O)O)O",
+            "formula": {
+              "counts": {
+                "C": 21,
+                "H": 20,
+                "O": 12
+              }
+            },
+            "exact_mass": 464.095477,
+            "provenance": "experimental",
+            "source": "orchestrator mock library",
+            "evidence_graph": null
+          },
+          "score": 0.6175,
+          "ranking_convention": "lower_is_better",
+          "coverage": 0.5,
+          "margin": null,
+          "ranking_interval": null,
+          "tied_candidates": [],
+          "verdict": "tentative",
+          "evidence_graph": {
+            "node_id": "isoquercitrin",
+            "claim": "identity: isoquercitrin",
+            "evidence": [
+              {
+                "source_spectrum": "observed:mock",
+                "spectral_feature": "fixture spectral distance",
+                "relation": "matched:mock",
+                "strength": 0.73
+              },
+              {
+                "source_spectrum": "isolation:fractions",
+                "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted polar -- consistent with",
+                "relation": "isolation_polarity",
+                "strength": 0.1125
+              },
+              {
+                "source_spectrum": "isolation:TLC",
+                "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavonol'] (of ['aromatic', 'flavonoid', 'flavonol', 'phenolic', 'triterpene'])",
+                "relation": "isolation_tlc_class",
+                "strength": 0.2
+              },
+              {
+                "source_spectrum": "isolation:flash_uv",
+                "spectral_feature": "flash lambda-max 370.0 nm inside the candidate's flavonol chromophore band 340-390 nm",
+                "relation": "isolation_flash_uv",
+                "strength": 0.15
+              }
+            ],
+            "confidence": 0.5,
+            "gaps": []
+          },
+          "evidence_profile": null,
+          "taxon_prior_match": "none",
+          "taxon_prior_provenance": [],
+          "isolation_evidence": [
+            {
+              "source_spectrum": "isolation:fractions",
+              "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted polar -- consistent with",
+              "relation": "isolation_polarity",
+              "strength": 0.1125
+            },
+            {
+              "source_spectrum": "isolation:TLC",
+              "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavonol'] (of ['aromatic', 'flavonoid', 'flavonol', 'phenolic', 'triterpene'])",
+              "relation": "isolation_tlc_class",
+              "strength": 0.2
+            },
+            {
+              "source_spectrum": "isolation:flash_uv",
+              "spectral_feature": "flash lambda-max 370.0 nm inside the candidate's flavonol chromophore band 340-390 nm",
+              "relation": "isolation_flash_uv",
+              "strength": 0.15
+            }
+          ],
+          "isolation_bonus": 0.4625,
+          "level_1_match": null,
+          "rt_offset_applied": null,
+          "uv_evidence": null,
+          "uv_bonus": 0.0,
+          "rt_prediction": null,
+          "rt_bonus": 0.0,
+          "ri_used": null,
+          "purity_score": null,
+          "classification_chain": [],
+          "evidence_chain": []
+        },
+        {
+          "candidate": {
+            "id": "quercetin",
+            "name": "quercetin",
+            "smiles": "O=c1cc(-c2c(O)cc(O)cc2O)oc2cc(O)cc(O)c12",
+            "formula": {
+              "counts": {
+                "C": 15,
+                "H": 10,
+                "O": 7
+              }
+            },
+            "exact_mass": 302.042653,
+            "provenance": "experimental",
+            "source": "orchestrator mock library",
+            "evidence_graph": null
+          },
+          "score": 1.0875,
+          "ranking_convention": "lower_is_better",
+          "coverage": 0.5,
+          "margin": null,
+          "ranking_interval": null,
+          "tied_candidates": [],
+          "verdict": "tentative",
+          "evidence_graph": {
+            "node_id": "quercetin",
+            "claim": "identity: quercetin",
+            "evidence": [
+              {
+                "source_spectrum": "observed:mock",
+                "spectral_feature": "fixture spectral distance",
+                "relation": "matched:mock",
+                "strength": 0.725
+              },
+              {
+                "source_spectrum": "isolation:fractions",
+                "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted mid -- consistent with",
+                "relation": "isolation_polarity",
+                "strength": 0.1125
+              },
+              {
+                "source_spectrum": "isolation:TLC",
+                "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavone'] (of ['aromatic', 'flavone', 'flavonoid', 'phenolic', 'triterpene'])",
+                "relation": "isolation_tlc_class",
+                "strength": 0.2
+              },
+              {
+                "source_spectrum": "isolation:flash_uv",
+                "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's flavone chromophore band 310-350 nm",
+                "relation": "isolation_flash_uv",
+                "strength": 0.3
+              }
+            ],
+            "confidence": 0.5,
+            "gaps": []
+          },
+          "evidence_profile": null,
+          "taxon_prior_match": "none",
+          "taxon_prior_provenance": [],
+          "isolation_evidence": [
+            {
+              "source_spectrum": "isolation:fractions",
+              "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted mid -- consistent with",
+              "relation": "isolation_polarity",
+              "strength": 0.1125
+            },
+            {
+              "source_spectrum": "isolation:TLC",
+              "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavone'] (of ['aromatic', 'flavone', 'flavonoid', 'phenolic', 'triterpene'])",
+              "relation": "isolation_tlc_class",
+              "strength": 0.2
+            },
+            {
+              "source_spectrum": "isolation:flash_uv",
+              "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's flavone chromophore band 310-350 nm",
+              "relation": "isolation_flash_uv",
+              "strength": 0.3
+            }
+          ],
+          "isolation_bonus": 0.0125,
+          "level_1_match": null,
+          "rt_offset_applied": null,
+          "uv_evidence": null,
+          "uv_bonus": 0.0,
+          "rt_prediction": null,
+          "rt_bonus": 0.0,
+          "ri_used": null,
+          "purity_score": null,
+          "classification_chain": [],
+          "evidence_chain": []
+        },
+        {
+          "candidate": {
+            "id": "caffeine",
+            "name": "caffeine",
+            "smiles": "Cn1c(=O)c2c(ncn2C)n(C)c1=O",
+            "formula": {
+              "counts": {
+                "C": 8,
+                "H": 10,
+                "N": 4,
+                "O": 2
+              }
+            },
+            "exact_mass": 194.080376,
+            "provenance": "experimental",
+            "source": "orchestrator mock library",
+            "evidence_graph": null
+          },
+          "score": 1.4875,
+          "ranking_convention": "lower_is_better",
+          "coverage": 0.5,
+          "margin": null,
+          "ranking_interval": null,
+          "tied_candidates": [],
+          "verdict": "tentative",
+          "evidence_graph": {
+            "node_id": "caffeine",
+            "claim": "identity: caffeine",
+            "evidence": [
+              {
+                "source_spectrum": "observed:mock",
+                "spectral_feature": "fixture spectral distance",
+                "relation": "matched:mock",
+                "strength": 0.75
+              },
+              {
+                "source_spectrum": "isolation:fractions",
+                "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted very_polar -- consistent with",
+                "relation": "isolation_polarity",
+                "strength": 0.1125
+              },
+              {
+                "source_spectrum": "isolation:TLC",
+                "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts only ['alkaloid', 'aromatic'] -- no overlap",
+                "relation": "isolation_tlc_class",
+                "strength": 0.3
+              },
+              {
+                "source_spectrum": "isolation:flash_uv",
+                "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's aromatic chromophore band 250-290 nm",
+                "relation": "isolation_flash_uv",
+                "strength": 0.3
+              }
+            ],
+            "confidence": 0.5,
+            "gaps": []
+          },
+          "evidence_profile": null,
+          "taxon_prior_match": "none",
+          "taxon_prior_provenance": [],
+          "isolation_evidence": [
+            {
+              "source_spectrum": "isolation:fractions",
+              "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted very_polar -- consistent with",
+              "relation": "isolation_polarity",
+              "strength": 0.1125
+            },
+            {
+              "source_spectrum": "isolation:TLC",
+              "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts only ['alkaloid', 'aromatic'] -- no overlap",
+              "relation": "isolation_tlc_class",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "isolation:flash_uv",
+              "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's aromatic chromophore band 250-290 nm",
+              "relation": "isolation_flash_uv",
+              "strength": 0.3
+            }
+          ],
+          "isolation_bonus": -0.4875,
+          "level_1_match": null,
+          "rt_offset_applied": null,
+          "uv_evidence": null,
+          "uv_bonus": 0.0,
+          "rt_prediction": null,
+          "rt_bonus": 0.0,
+          "ri_used": null,
+          "purity_score": null,
+          "classification_chain": [],
+          "evidence_chain": []
+        },
+        {
+          "candidate": {
+            "id": "panduratin-a",
+            "name": "panduratin A",
+            "smiles": "CC(C)=CCC[C@@H](C)C(=O)c1c(O)cc(O)c(C)c1",
+            "formula": {
+              "counts": {
+                "C": 16,
+                "H": 22,
+                "O": 3
+              }
+            },
+            "exact_mass": 262.156895,
+            "provenance": "experimental",
+            "source": "orchestrator mock library",
+            "evidence_graph": null
+          },
+          "score": 2.0,
+          "ranking_convention": "lower_is_better",
+          "coverage": 0.5,
+          "margin": null,
+          "ranking_interval": null,
+          "tied_candidates": [],
+          "verdict": "tentative",
+          "evidence_graph": {
+            "node_id": "panduratin-a",
+            "claim": "identity: panduratin A",
+            "evidence": [
+              {
+                "source_spectrum": "observed:mock",
+                "spectral_feature": "fixture spectral distance",
+                "relation": "matched:mock",
+                "strength": 0.7125
+              },
+              {
+                "source_spectrum": "isolation:fractions",
+                "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted nonpolar -- contradicts",
+                "relation": "isolation_polarity",
+                "strength": 0.25
+              },
+              {
+                "source_spectrum": "isolation:TLC",
+                "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts only ['aromatic', 'phenolic', 'triterpene'] -- no overlap",
+                "relation": "isolation_tlc_class",
+                "strength": 0.3
+              },
+              {
+                "source_spectrum": "isolation:flash_uv",
+                "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's aromatic chromophore band 250-290 nm",
+                "relation": "isolation_flash_uv",
+                "strength": 0.3
+              }
+            ],
+            "confidence": 0.5,
+            "gaps": []
+          },
+          "evidence_profile": null,
+          "taxon_prior_match": "none",
+          "taxon_prior_provenance": [],
+          "isolation_evidence": [
+            {
+              "source_spectrum": "isolation:fractions",
+              "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted nonpolar -- contradicts",
+              "relation": "isolation_polarity",
+              "strength": 0.25
+            },
+            {
+              "source_spectrum": "isolation:TLC",
+              "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts only ['aromatic', 'phenolic', 'triterpene'] -- no overlap",
+              "relation": "isolation_tlc_class",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "isolation:flash_uv",
+              "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's aromatic chromophore band 250-290 nm",
+              "relation": "isolation_flash_uv",
+              "strength": 0.3
+            }
+          ],
+          "isolation_bonus": -0.85,
+          "level_1_match": null,
+          "rt_offset_applied": null,
+          "uv_evidence": null,
+          "uv_bonus": 0.0,
+          "rt_prediction": null,
+          "rt_bonus": 0.0,
+          "ri_used": null,
+          "purity_score": null,
+          "classification_chain": [],
+          "evidence_chain": []
+        }
+      ],
+      "top_candidate_name": "isoquercitrin",
+      "top_evidence_graph": {
+        "node_id": "isoquercitrin",
+        "claim": "identity: isoquercitrin",
+        "evidence": [
+          {
+            "source_spectrum": "observed:mock",
+            "spectral_feature": "fixture spectral distance",
+            "relation": "matched:mock",
+            "strength": 0.73
+          },
+          {
+            "source_spectrum": "isolation:fractions",
+            "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted polar -- consistent with",
+            "relation": "isolation_polarity",
+            "strength": 0.1125
+          },
+          {
+            "source_spectrum": "isolation:TLC",
+            "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavonol'] (of ['aromatic', 'flavonoid', 'flavonol', 'phenolic', 'triterpene'])",
+            "relation": "isolation_tlc_class",
+            "strength": 0.2
+          },
+          {
+            "source_spectrum": "isolation:flash_uv",
+            "spectral_feature": "flash lambda-max 370.0 nm inside the candidate's flavonol chromophore band 340-390 nm",
+            "relation": "isolation_flash_uv",
+            "strength": 0.15
+          }
+        ],
+        "confidence": 0.5,
+        "gaps": []
+      },
+      "taxon_prior_applied": true,
+      "isolation_applied": true
+    },
+    "literature-ground": {
+      "papers": [
+        {
+          "pmid": "20000001",
+          "doi": "10.1000/mock.species.1",
+          "title": "isoquercitrin isolated from Curcuma longa and characterised by NMR",
+          "abstract": "Bioactivity-guided isolation of isoquercitrin from Curcuma longa; full NMR and HRMS assignment.",
+          "year": 2021,
+          "authors": [
+            "D. Naturalproducts"
+          ],
+          "journal": "Journal of Natural Products",
+          "source": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/20000001/",
+          "relevance_score": 0.0,
+          "also_found_in": []
+        },
+        {
+          "pmid": "20000002",
+          "doi": "10.1000/mock.species.2",
+          "title": "Chemical constituents of Curcuma longa: isoquercitrin and related metabolites",
+          "abstract": "Phytochemical investigation of Curcuma longa affording isoquercitrin among the major constituents.",
+          "year": 2019,
+          "authors": [
+            "E. Ethnobotanist"
+          ],
+          "journal": "Phytochemistry",
+          "source": "PubMed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/20000002/",
+          "relevance_score": 0.0,
+          "also_found_in": []
+        }
+      ],
+      "total_count": 2,
+      "source_counts": {
+        "PubMed": 2
+      }
+    }
+  },
+  "layer_chain_over_ranks": {
+    "layers_applied": [
+      "level1",
+      "rt",
+      "uv",
+      "purity",
+      "pharmacopoeial_markers"
+    ],
+    "skipped_layers": [],
+    "ranks": [
+      {
+        "candidate": {
+          "id": "isoquercitrin",
+          "name": "isoquercitrin",
+          "smiles": "C1=CC(=C(C=C1C2=C(C(=O)C3=C(C=C(C=C3O2)O)O)O)OC4C(C(C(C(O4)CO)O)O)O)O",
+          "formula": {
+            "counts": {
+              "C": 21,
+              "H": 20,
+              "O": 12
+            }
+          },
+          "exact_mass": 464.095477,
+          "provenance": "experimental",
+          "source": "orchestrator mock library",
+          "evidence_graph": null
+        },
+        "score": 0.6175,
+        "ranking_convention": "lower_is_better",
+        "coverage": 0.5,
+        "margin": null,
+        "ranking_interval": null,
+        "tied_candidates": [],
+        "verdict": "tentative",
+        "evidence_graph": {
+          "node_id": "isoquercitrin",
+          "claim": "identity: isoquercitrin",
+          "evidence": [
+            {
+              "source_spectrum": "observed:mock",
+              "spectral_feature": "fixture spectral distance",
+              "relation": "matched:mock",
+              "strength": 0.73
+            },
+            {
+              "source_spectrum": "isolation:fractions",
+              "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted polar -- consistent with",
+              "relation": "isolation_polarity",
+              "strength": 0.1125
+            },
+            {
+              "source_spectrum": "isolation:TLC",
+              "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavonol'] (of ['aromatic', 'flavonoid', 'flavonol', 'phenolic', 'triterpene'])",
+              "relation": "isolation_tlc_class",
+              "strength": 0.2
+            },
+            {
+              "source_spectrum": "isolation:flash_uv",
+              "spectral_feature": "flash lambda-max 370.0 nm inside the candidate's flavonol chromophore band 340-390 nm",
+              "relation": "isolation_flash_uv",
+              "strength": 0.15
+            },
+            {
+              "source_spectrum": "retention_model",
+              "spectral_feature": "predicted 3.00 min vs observed 9.90 min",
+              "relation": "rt_prediction_far",
+              "strength": 0.25
+            },
+            {
+              "source_spectrum": "classifier:uv_chromophore",
+              "spectral_feature": "observed flavonol (confidence 0.95); candidate classes: flavonol, flavone",
+              "relation": "uv_chromophore_match",
+              "strength": 0.2
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm)",
+              "spectral_feature": "marker curcumin: RT in range=False, UV in range=True (expected RT 14.5-15.8 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+              "spectral_feature": "marker demethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.2-16.6 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+              "spectral_feature": "marker bisdemethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.9-17.5 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            }
+          ],
+          "confidence": 0.5,
+          "gaps": []
+        },
+        "evidence_profile": null,
+        "taxon_prior_match": "none",
+        "taxon_prior_provenance": [],
+        "isolation_evidence": [],
+        "isolation_bonus": 0.0,
+        "level_1_match": null,
+        "rt_offset_applied": null,
+        "uv_evidence": {
+          "primary_class": "flavonol",
+          "confidence": 0.95,
+          "band_i_nm": 370.0,
+          "band_ii_nm": 280.0,
+          "band_ratio": 2.375,
+          "diagnosis_notes": "Band I 370 nm, Band II 280 nm, ratio 2.38 -> flavonol (score 5/5); reversed-phase MeOH/MeCN-water PDA (solvent shifts 5-15 nm)"
+        },
+        "uv_bonus": 0.2,
+        "rt_prediction": 3.0,
+        "rt_bonus": -0.25,
+        "ri_used": null,
+        "purity_score": 0.95,
+        "classification_chain": [
+          "rt",
+          "uv",
+          "purity",
+          "pharmacopoeial_markers"
+        ],
+        "evidence_chain": [
+          {
+            "source_spectrum": "retention_model",
+            "spectral_feature": "predicted 3.00 min vs observed 9.90 min",
+            "relation": "rt",
+            "strength": 0.25
+          },
+          {
+            "source_spectrum": "classifier:uv_chromophore",
+            "spectral_feature": "observed flavonol (confidence 0.95); candidate classes: flavonol, flavone",
+            "relation": "uv",
+            "strength": 0.2
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm)",
+            "spectral_feature": "marker curcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+            "spectral_feature": "marker demethoxycurcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+            "spectral_feature": "marker bisdemethoxycurcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "id": "quercetin",
+          "name": "quercetin",
+          "smiles": "O=c1cc(-c2c(O)cc(O)cc2O)oc2cc(O)cc(O)c12",
+          "formula": {
+            "counts": {
+              "C": 15,
+              "H": 10,
+              "O": 7
+            }
+          },
+          "exact_mass": 302.042653,
+          "provenance": "experimental",
+          "source": "orchestrator mock library",
+          "evidence_graph": null
+        },
+        "score": 0.8875,
+        "ranking_convention": "lower_is_better",
+        "coverage": 0.5,
+        "margin": null,
+        "ranking_interval": null,
+        "tied_candidates": [],
+        "verdict": "tentative",
+        "evidence_graph": {
+          "node_id": "quercetin",
+          "claim": "identity: quercetin",
+          "evidence": [
+            {
+              "source_spectrum": "observed:mock",
+              "spectral_feature": "fixture spectral distance",
+              "relation": "matched:mock",
+              "strength": 0.725
+            },
+            {
+              "source_spectrum": "isolation:fractions",
+              "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted mid -- consistent with",
+              "relation": "isolation_polarity",
+              "strength": 0.1125
+            },
+            {
+              "source_spectrum": "isolation:TLC",
+              "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts ['flavone'] (of ['aromatic', 'flavone', 'flavonoid', 'phenolic', 'triterpene'])",
+              "relation": "isolation_tlc_class",
+              "strength": 0.2
+            },
+            {
+              "source_spectrum": "isolation:flash_uv",
+              "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's flavone chromophore band 310-350 nm",
+              "relation": "isolation_flash_uv",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "retention_model",
+              "spectral_feature": "predicted 9.36 min vs observed 9.90 min",
+              "relation": "rt_prediction_close",
+              "strength": 0.15
+            },
+            {
+              "source_spectrum": "classifier:uv_chromophore",
+              "spectral_feature": "observed flavonol (confidence 0.95); candidate classes: flavone",
+              "relation": "uv_chromophore_neutral",
+              "strength": 0.0
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm)",
+              "spectral_feature": "marker curcumin: RT in range=False, UV in range=True (expected RT 14.5-15.8 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+              "spectral_feature": "marker demethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.2-16.6 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+              "spectral_feature": "marker bisdemethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.9-17.5 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            }
+          ],
+          "confidence": 0.5,
+          "gaps": []
+        },
+        "evidence_profile": null,
+        "taxon_prior_match": "none",
+        "taxon_prior_provenance": [],
+        "isolation_evidence": [],
+        "isolation_bonus": 0.0,
+        "level_1_match": null,
+        "rt_offset_applied": null,
+        "uv_evidence": {
+          "primary_class": "flavonol",
+          "confidence": 0.95,
+          "band_i_nm": 370.0,
+          "band_ii_nm": 280.0,
+          "band_ratio": 2.375,
+          "diagnosis_notes": "Band I 370 nm, Band II 280 nm, ratio 2.38 -> flavonol (score 5/5); reversed-phase MeOH/MeCN-water PDA (solvent shifts 5-15 nm)"
+        },
+        "uv_bonus": 0.0,
+        "rt_prediction": 9.36,
+        "rt_bonus": 0.15,
+        "ri_used": null,
+        "purity_score": 0.95,
+        "classification_chain": [
+          "rt",
+          "uv",
+          "purity",
+          "pharmacopoeial_markers"
+        ],
+        "evidence_chain": [
+          {
+            "source_spectrum": "retention_model",
+            "spectral_feature": "predicted 9.36 min vs observed 9.90 min",
+            "relation": "rt",
+            "strength": 0.15
+          },
+          {
+            "source_spectrum": "classifier:uv_chromophore",
+            "spectral_feature": "observed flavonol (confidence 0.95); candidate classes: flavone",
+            "relation": "uv",
+            "strength": 0.0
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm)",
+            "spectral_feature": "marker curcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+            "spectral_feature": "marker demethoxycurcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+            "spectral_feature": "marker bisdemethoxycurcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "id": "caffeine",
+          "name": "caffeine",
+          "smiles": "Cn1c(=O)c2c(ncn2C)n(C)c1=O",
+          "formula": {
+            "counts": {
+              "C": 8,
+              "H": 10,
+              "N": 4,
+              "O": 2
+            }
+          },
+          "exact_mass": 194.080376,
+          "provenance": "experimental",
+          "source": "orchestrator mock library",
+          "evidence_graph": null
+        },
+        "score": 1.6875,
+        "ranking_convention": "lower_is_better",
+        "coverage": 0.5,
+        "margin": null,
+        "ranking_interval": null,
+        "tied_candidates": [],
+        "verdict": "tentative",
+        "evidence_graph": {
+          "node_id": "caffeine",
+          "claim": "identity: caffeine",
+          "evidence": [
+            {
+              "source_spectrum": "observed:mock",
+              "spectral_feature": "fixture spectral distance",
+              "relation": "matched:mock",
+              "strength": 0.75
+            },
+            {
+              "source_spectrum": "isolation:fractions",
+              "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted very_polar -- consistent with",
+              "relation": "isolation_polarity",
+              "strength": 0.1125
+            },
+            {
+              "source_spectrum": "isolation:TLC",
+              "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts only ['alkaloid', 'aromatic'] -- no overlap",
+              "relation": "isolation_tlc_class",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "isolation:flash_uv",
+              "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's aromatic chromophore band 250-290 nm",
+              "relation": "isolation_flash_uv",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "retention_model",
+              "spectral_feature": "predicted 3.10 min vs observed 9.90 min",
+              "relation": "rt_prediction_far",
+              "strength": 0.25
+            },
+            {
+              "source_spectrum": "classifier:uv_chromophore",
+              "spectral_feature": "observed flavonol (confidence 0.95); candidate classes: none determined",
+              "relation": "uv_chromophore_neutral",
+              "strength": 0.0
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm)",
+              "spectral_feature": "marker curcumin: RT in range=False, UV in range=True (expected RT 14.5-15.8 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+              "spectral_feature": "marker demethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.2-16.6 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+              "spectral_feature": "marker bisdemethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.9-17.5 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            }
+          ],
+          "confidence": 0.5,
+          "gaps": []
+        },
+        "evidence_profile": null,
+        "taxon_prior_match": "none",
+        "taxon_prior_provenance": [],
+        "isolation_evidence": [],
+        "isolation_bonus": 0.0,
+        "level_1_match": null,
+        "rt_offset_applied": null,
+        "uv_evidence": {
+          "primary_class": "flavonol",
+          "confidence": 0.95,
+          "band_i_nm": 370.0,
+          "band_ii_nm": 280.0,
+          "band_ratio": 2.375,
+          "diagnosis_notes": "Band I 370 nm, Band II 280 nm, ratio 2.38 -> flavonol (score 5/5); reversed-phase MeOH/MeCN-water PDA (solvent shifts 5-15 nm)"
+        },
+        "uv_bonus": 0.0,
+        "rt_prediction": 3.1,
+        "rt_bonus": -0.25,
+        "ri_used": null,
+        "purity_score": 0.95,
+        "classification_chain": [
+          "rt",
+          "uv",
+          "purity",
+          "pharmacopoeial_markers"
+        ],
+        "evidence_chain": [
+          {
+            "source_spectrum": "retention_model",
+            "spectral_feature": "predicted 3.10 min vs observed 9.90 min",
+            "relation": "rt",
+            "strength": 0.25
+          },
+          {
+            "source_spectrum": "classifier:uv_chromophore",
+            "spectral_feature": "observed flavonol (confidence 0.95); candidate classes: none determined",
+            "relation": "uv",
+            "strength": 0.0
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm)",
+            "spectral_feature": "marker curcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+            "spectral_feature": "marker demethoxycurcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+            "spectral_feature": "marker bisdemethoxycurcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "id": "panduratin-a",
+          "name": "panduratin A",
+          "smiles": "CC(C)=CCC[C@@H](C)C(=O)c1c(O)cc(O)c(C)c1",
+          "formula": {
+            "counts": {
+              "C": 16,
+              "H": 22,
+              "O": 3
+            }
+          },
+          "exact_mass": 262.156895,
+          "provenance": "experimental",
+          "source": "orchestrator mock library",
+          "evidence_graph": null
+        },
+        "score": 2.2,
+        "ranking_convention": "lower_is_better",
+        "coverage": 0.5,
+        "margin": null,
+        "ranking_interval": null,
+        "tied_candidates": [],
+        "verdict": "tentative",
+        "evidence_graph": {
+          "node_id": "panduratin-a",
+          "claim": "identity: panduratin A",
+          "evidence": [
+            {
+              "source_spectrum": "observed:mock",
+              "spectral_feature": "fixture spectral distance",
+              "relation": "matched:mock",
+              "strength": 0.7125
+            },
+            {
+              "source_spectrum": "isolation:fractions",
+              "spectral_feature": "elutes in F2, F3 (present in F2, F3 (tiers: mid, polar; spread 1)) -> polar; candidate predicted nonpolar -- contradicts",
+              "relation": "isolation_polarity",
+              "strength": 0.25
+            },
+            {
+              "source_spectrum": "isolation:TLC",
+              "spectral_feature": "TLC classes ['flavonol', 'flavone', 'flavanone']; candidate predicts only ['aromatic', 'phenolic', 'triterpene'] -- no overlap",
+              "relation": "isolation_tlc_class",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "isolation:flash_uv",
+              "spectral_feature": "flash lambda-max 370.0 nm outside the candidate's aromatic chromophore band 250-290 nm",
+              "relation": "isolation_flash_uv",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "retention_model",
+              "spectral_feature": "predicted 17.20 min vs observed 9.90 min",
+              "relation": "rt_prediction_far",
+              "strength": 0.25
+            },
+            {
+              "source_spectrum": "classifier:uv_chromophore",
+              "spectral_feature": "observed flavonol (confidence 0.95); candidate classes: none determined",
+              "relation": "uv_chromophore_neutral",
+              "strength": 0.0
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm)",
+              "spectral_feature": "marker curcumin: RT in range=False, UV in range=True (expected RT 14.5-15.8 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+              "spectral_feature": "marker demethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.2-16.6 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            },
+            {
+              "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+              "spectral_feature": "marker bisdemethoxycurcumin: RT in range=False, UV in range=True (expected RT 15.9-17.5 min)",
+              "relation": "pharmacopoeial_marker_match",
+              "strength": 0.3
+            }
+          ],
+          "confidence": 0.5,
+          "gaps": []
+        },
+        "evidence_profile": null,
+        "taxon_prior_match": "none",
+        "taxon_prior_provenance": [],
+        "isolation_evidence": [],
+        "isolation_bonus": 0.0,
+        "level_1_match": null,
+        "rt_offset_applied": null,
+        "uv_evidence": {
+          "primary_class": "flavonol",
+          "confidence": 0.95,
+          "band_i_nm": 370.0,
+          "band_ii_nm": 280.0,
+          "band_ratio": 2.375,
+          "diagnosis_notes": "Band I 370 nm, Band II 280 nm, ratio 2.38 -> flavonol (score 5/5); reversed-phase MeOH/MeCN-water PDA (solvent shifts 5-15 nm)"
+        },
+        "uv_bonus": 0.0,
+        "rt_prediction": 17.2,
+        "rt_bonus": -0.25,
+        "ri_used": null,
+        "purity_score": 0.95,
+        "classification_chain": [
+          "rt",
+          "uv",
+          "purity",
+          "pharmacopoeial_markers"
+        ],
+        "evidence_chain": [
+          {
+            "source_spectrum": "retention_model",
+            "spectral_feature": "predicted 17.20 min vs observed 9.90 min",
+            "relation": "rt",
+            "strength": 0.25
+          },
+          {
+            "source_spectrum": "classifier:uv_chromophore",
+            "spectral_feature": "observed flavonol (confidence 0.95); candidate classes: none determined",
+            "relation": "uv",
+            "strength": 0.0
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph (curcuminoid assay at 425 nm)",
+            "spectral_feature": "marker curcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+            "spectral_feature": "marker demethoxycurcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          },
+          {
+            "source_spectrum": "pharmacopoeial_marker:European Pharmacopoeia, Curcuma longa L. rhizoma monograph",
+            "spectral_feature": "marker bisdemethoxycurcumin",
+            "relation": "pharmacopoeial_markers",
+            "strength": 0.3
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -45,6 +45,9 @@ import {
   bestRank,
   formatMz,
   formatPercent,
+  formatFormula,
+  formatMargin,
+  formulaMatches,
   truncateSmiles,
 } from "@/lib/phyto/formatting";
 import { MOCK_CANDIDATE_RANKS } from "@/lib/phyto/fixtures";
@@ -111,7 +114,7 @@ export function ElucidationPage() {
       out = out.filter(
         (r) =>
           r.candidate.name.toLowerCase().includes(q) ||
-          r.candidate.formula.toLowerCase().includes(q) ||
+          formulaMatches(r.candidate.formula, q) ||
           r.candidate.smiles.toLowerCase().includes(q)
       );
     }
@@ -258,7 +261,7 @@ export function ElucidationPage() {
                                   {r.candidate.name}
                                 </div>
                                 <div className="font-mono text-[10px] text-muted-foreground">
-                                  {r.candidate.formula} · {formatMz(r.candidate.exact_mass)}
+                                  {formatFormula(r.candidate.formula)} · {formatMz(r.candidate.exact_mass)}
                                 </div>
                                 <div className="font-mono text-[10px] text-muted-foreground">
                                   {truncateSmiles(r.candidate.smiles)}
@@ -387,7 +390,7 @@ export function ElucidationPage() {
           open={!!evidenceFor}
           onOpenChange={(o) => !o && setEvidenceFor(null)}
           title={evidenceFor.candidate.name}
-          subtitle={`${evidenceFor.candidate.formula} · ${formatMz(evidenceFor.candidate.exact_mass)}`}
+          subtitle={`${formatFormula(evidenceFor.candidate.formula)} · ${formatMz(evidenceFor.candidate.exact_mass)}`}
           graph={evidenceFor.evidence_graph ?? { nodes: [], edges: [] }}
           unmatchedObserved={evidenceFor.gaps.filter((g) => g.toLowerCase().includes("observed"))}
           unmatchedPredicted={evidenceFor.gaps.filter((g) => g.toLowerCase().includes("predicted"))}
@@ -423,7 +426,7 @@ function CandidateDetail({
           <VerdictBadge verdict={rank.verdict} />
         </CardTitle>
         <CardDescription className="font-mono text-xs">
-          {rank.candidate.formula} · exact mass {formatMz(rank.candidate.exact_mass)} · {rank.candidate.provenance}
+          {formatFormula(rank.candidate.formula)} · exact mass {formatMz(rank.candidate.exact_mass)} · {rank.candidate.provenance}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -433,7 +436,7 @@ function CandidateDetail({
         <div className="grid grid-cols-3 gap-2 text-xs">
           <Stat label="Score" value={rank.score.toFixed(2)} />
           <Stat label="Coverage" value={formatPercent(rank.coverage)} />
-          <Stat label="Margin" value={`${(rank.margin * 100).toFixed(0)}%`} />
+          <Stat label="Margin" value={formatMargin(rank.margin)} />
         </div>
 
         <div>

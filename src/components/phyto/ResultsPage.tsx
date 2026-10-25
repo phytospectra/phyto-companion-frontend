@@ -11,7 +11,7 @@ import { VerdictBadge } from "@/components/phyto/common/VerdictBadge";
 import { DisclaimerBanner } from "@/components/phyto/common/DisclaimerBanner";
 import { SpectrumViewer } from "@/components/phyto/spectra/SpectrumViewer";
 import { MOCK_CANDIDATE_RANKS, MOCK_MECHANISM_HYPOTHESIS, MOCK_RUN_STATE } from "@/lib/phyto/fixtures";
-import { formatMz, formatPercent } from "@/lib/phyto/formatting";
+import { formatMz, formatPercent, formatFormula, formatMargin } from "@/lib/phyto/formatting";
 import { APP_META } from "@/lib/phyto/constants";
 
 interface ResultsPageProps {
@@ -91,7 +91,7 @@ export function ResultsPage({ onNavigateToMechanism }: ResultsPageProps) {
             <VerdictBadge verdict={top.verdict} />
           </CardTitle>
           <CardDescription>
-            {top.candidate.name} · {top.candidate.formula} · {formatMz(top.candidate.exact_mass)}
+            {top.candidate.name} · {formatFormula(top.candidate.formula)} · {formatMz(top.candidate.exact_mass)}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6 lg:grid-cols-2">
@@ -99,7 +99,7 @@ export function ResultsPage({ onNavigateToMechanism }: ResultsPageProps) {
             <div className="grid grid-cols-3 gap-2 text-xs">
               <Stat label="Score" value={top.score.toFixed(2)} />
               <Stat label="Coverage" value={formatPercent(top.coverage)} />
-              <Stat label="Margin" value={`${(top.margin * 100).toFixed(0)}%`} />
+              <Stat label="Margin" value={formatMargin(top.margin)} />
             </div>
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1">
