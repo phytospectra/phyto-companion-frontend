@@ -1,6 +1,15 @@
 # Phytospectra web frontend (Next.js standalone) on Cloud Run.
+#
+# NEXT_PUBLIC_* values are inlined into the client bundle at BUILD time, so
+# they must arrive as build args (declared before `npm run build`), not as
+# runtime container env. Pass them in the cloudbuild yaml or with
+# `docker build --build-arg`.
 FROM node:22-slim AS build
 WORKDIR /app
+ARG NEXT_PUBLIC_USE_MOCKS
+ARG NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_USE_MOCKS=$NEXT_PUBLIC_USE_MOCKS \
+    NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY . .
