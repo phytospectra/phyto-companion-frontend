@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { UploadFormValues } from "@/lib/phyto/upload-schema";
 
@@ -31,9 +32,28 @@ export function MetadataForm({ form }: MetadataFormProps) {
           <FlaskRound aria-hidden="true" style={{ width: "1rem", height: "1rem" }} />
           Sample metadata
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="flex flex-wrap items-center gap-1">
           All fields optional but encouraged — better metadata → better MSI
           level assignment in the network.
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                className="underline decoration-dotted underline-offset-2"
+                aria-label="How should I prepare my metadata?"
+              >
+                How should I prepare my metadata?
+              </button>
+            </TooltipTrigger>
+            <TooltipContent role="tooltip" className="max-w-xs">
+              <p>
+                Use the binomial species name, standard plant-part vocabulary,
+                and record the extraction solvent ratio exactly as prepared. A
+                voucher specimen number is the single highest-value field: it
+                anchors the MSI level-2 assignment to a physical specimen.
+              </p>
+            </TooltipContent>
+          </Tooltip>
         </CardDescription>
       </CardHeader>
       <CardContent>

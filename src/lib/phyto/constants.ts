@@ -154,3 +154,46 @@ export const APP_META = {
   version: "0.1.0-demo",
   model_version: "phyto-orchestrator-v0.4.2",
 } as const;
+
+/**
+ * Feature flags for the sign-in entry experience. ORCID SSO needs the
+ * Firebase provider to be registered in the Firebase console and wired via
+ * `signInWithCredential` (see AuthProvider TODO) — until then the button
+ * stays hidden. Flip to `true` when the provider is live.
+ */
+export const FEATURE_FLAGS = {
+  orcid_signin: false,
+} as const;
+
+/**
+ * What the entry page promises. Kept next to WORKFLOWS so the marketing
+ * copy and the product's actual capabilities are edited together — if a
+ * workflow is removed, the bullets must change with it.
+ */
+export const VALUE_PROPS = [
+  "Evidence-graded hypotheses, not black-box guesses — every claim carries a verdict and its evidence graph",
+  "Built for natural-product discovery workflows: identify, compare, novelty and mechanism",
+  "Clear confidence, coverage and provenance for every candidate, one click from its evidence",
+] as const;
+
+/**
+ * Largest single file the browser will accept, in bytes (200 MB). The
+ * backend does not stream file contents yet, so this is a client-side guard
+ * against multi-GB instrument archives wedging the tab.
+ */
+export const MAX_UPLOAD_FILE_BYTES = 200 * 1024 * 1024;
+
+/**
+ * Landing copy for /upload. Framed around what the product actually does
+ * today; "raw" is deliberately NOT listed because ingestion does not accept
+ * vendor formats.
+ */
+export const LANDING = {
+  headline: "Upload your NMR / LC-MS data and receive evidence-graded structural hypotheses.",
+  subheadline:
+    "Phytospectra ranks candidates against your spectra, shows the evidence behind every verdict, and abstains when the data does not support an identification.",
+  demo_label: "See a sample analysis",
+  demo_hint: "No account needed",
+  trust_note:
+    "Your data stays yours. Samples are used only for your runs, and raw uploads are never included in shared evidence views.",
+} as const;

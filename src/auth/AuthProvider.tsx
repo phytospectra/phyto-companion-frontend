@@ -14,6 +14,7 @@ export interface AuthUser {
 
 export type SignInOptions =
   | { provider: "google" }
+  | { provider: "orcid" }
   | { provider: "password"; email: string; password: string };
 
 export interface AuthContextValue {
@@ -129,11 +130,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const [{ signInWithPopup, signInWithEmailAndPassword }, { auth, googleProvider }] =
-      await Promise.all([import("firebase/auth"), import("./firebase")]);
+    const [
+      { signInWithPopup, signInWithEmailAndPassword, OAuthProvider },
+      { auth, googleProvider },
+    ] = await Promise.all([import("firebase/auth"), import("./firebase")]);
 
     if (options.provider === "google") {
       await signInWithPopup(auth, googleProvider);
+    } else if (options.provider === "orcid") {
+      // Generic OIDC provider. Requires the provider to be registered in the
+      // Firebase console with ORCID's client credentials first; the button
+      // stays behind FEATURE_FLAGS.orcid_signin until then.
+      // TODO(oauth): register the ORCID provider (firebase console →
+      // Identity Platform → OIDC) and flip FEATURE_FLAGS.orcid_signin.
+      const orcidProvider = new OAuthProvider("oidc.orcid");
+      orcidProvider.addScope("openid");
+      await signInWithPopup(auth, orcidProvider);
     } else {
       await signInWithEmailAndPassword(auth, options.email, options.password);
     }

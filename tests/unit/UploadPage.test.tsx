@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { UploadPage } from "@/components/phyto/upload/UploadPage";
 import { clearToken, setToken } from "@/api/client";
 import { useTokenStore } from "@/lib/phyto/stores";
+import { MAX_UPLOAD_FILE_BYTES } from "@/lib/phyto/constants";
 
 function mzML(name = "sample.mzML") {
   return new File(["<mzML/>"], name, { type: "application/xml" });
@@ -38,7 +39,22 @@ describe("UploadPage", () => {
     await pick(new File(["x"], "chromatogram.pdf", { type: "application/pdf" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      /Skipped 1 unsupported file: chromatogram\.pdf/
+      /Skipped chromatogram\.pdf — unsupported format/
+    );
+    expect(
+      screen.queryByLabelText("Selected spectra files")
+    ).not.toBeInTheDocument();
+  });
+
+  it("rejects an over-limit file with an actionable message", async () => {
+    renderUpload();
+    // Simulate a 201 MB file without allocating the bytes.
+    const big = new File(["x"], "huge.mzML", { type: "application/xml" });
+    Object.defineProperty(big, "size", { value: MAX_UPLOAD_FILE_BYTES + 1 });
+    await pick(big);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      /exceeds the 200\.00 MB per-file limit/
     );
     expect(
       screen.queryByLabelText("Selected spectra files")
@@ -56,12 +72,18 @@ describe("UploadPage", () => {
       await screen.findByText(/add at least one spectra file/i)
     ).toBeInTheDocument();
     expect(onRunStarted).not.toHaveBeenCalled();
+    expect(screen.getByTestId("upload-status")).toHaveTextContent(
+      /could not be started/i
+    );
   });
 
   it("starts a run through POST /runs and reports the returned run_id", async () => {
     const { onRunStarted } = renderUpload();
     await pick(mzML());
     await screen.findByText("sample.mzML");
+    expect(screen.getByTestId("file-selection-status")).toHaveTextContent(
+      "1 file selected."
+    );
 
     await userEvent.click(
       screen.getByRole("button", { name: /start analysis/i })
@@ -70,6 +92,9 @@ describe("UploadPage", () => {
     await waitFor(() => expect(onRunStarted).toHaveBeenCalledTimes(1));
     expect(onRunStarted).toHaveBeenCalledWith(
       expect.stringMatching(/^run_/)
+    );
+    expect(await screen.findByTestId("upload-status")).toHaveTextContent(
+      /analysis run run_ started|started\. opening/i
     );
   });
 
@@ -94,6 +119,19 @@ describe("UploadPage", () => {
 
     expect(
       await screen.findByText(/HRMS m\/z must be a positive number/i)
+    ).toBeInTheDocument();
+  });
+
+  it("lists accepted formats and shows the privacy note in the drop zone", () => {
+    renderUpload();
+    // The description splits the format list and the help link across
+    // nodes, so match on the stable fragments.
+    expect(
+      screen.getByText(/Accepted: .* Multiple files or a single archive/)
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "What file types are supported?" })).toBeInTheDocument();
+    expect(
+      screen.getByText(/Your data stays yours\./)
     ).toBeInTheDocument();
   });
 });
