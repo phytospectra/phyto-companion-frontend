@@ -226,6 +226,17 @@ async function request<T>(
   body?: unknown,
   options: RequestOptions = {}
 ): Promise<T> {
+  // Demo builds: no request may leave before the MSW service worker has
+  // claimed the page, or it reaches the real orchestrator and 401s. The
+  // check is inlined away entirely in non-mock builds.
+  if (
+    process.env.NEXT_PUBLIC_USE_MOCKS === "true" &&
+    typeof window !== "undefined"
+  ) {
+    const { whenMocksReady } = await import("@/mocks/init");
+    await whenMocksReady();
+  }
+
   const base = resolveBaseUrl();
   const url = `${base}${path.startsWith("/") ? path : `/${path}`}`;
 
