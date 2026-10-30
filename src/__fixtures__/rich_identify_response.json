@@ -1,5 +1,5 @@
 {
-  "_capture_note": "Gap-audit fixture (2026-10-22): rich identify dry-run through the orchestrator local plane with every chromatography layer's metadata, a seeded isolation record, taxon metadata and UV/RT/purity inputs. Sections: analysis_response (POST /analysis), run_status (GET /runs/{id}), citation, task_outputs (the ranks each layer's task produced \u2014 the data a result panel renders). NOTE: in the dry-run the apply-chromatography-layers task received zero ranks (it ran before elucidate), so the section layer_chain_over_ranks additionally runs the REAL backend chain (layer_chain.apply_chromatography_layers \u2014 the exact function the layers tool calls) over the elucidate ranks with the same metadata, to expose the full CandidateRank field surface a user-facing report must render.",
+  "_capture_note": "Gap-audit fixture (2026-10-22): rich identify dry-run through the orchestrator local plane with every chromatography layer's metadata, a seeded isolation record, taxon metadata and UV/RT/purity inputs. Sections: analysis_response (POST /analysis), run_status (GET /runs/{id}), citation, task_outputs (the ranks each layer's task produced — the data a result panel renders). NOTE: in the dry-run the apply-chromatography-layers task received zero ranks (it ran before elucidate), so the section layer_chain_over_ranks additionally runs the REAL backend chain (layer_chain.apply_chromatography_layers — the exact function the layers tool calls) over the elucidate ranks with the same metadata, to expose the full CandidateRank field surface a user-facing report must render.",
   "analysis_response": {
     "run_id": "run-98b4da8cc981",
     "status": "awaiting_review",
@@ -575,7 +575,8 @@
           "ri_used": null,
           "purity_score": null,
           "classification_chain": [],
-          "evidence_chain": []
+          "evidence_chain": [],
+          "msi_level": null
         },
         {
           "candidate": {
@@ -666,7 +667,8 @@
           "ri_used": null,
           "purity_score": null,
           "classification_chain": [],
-          "evidence_chain": []
+          "evidence_chain": [],
+          "msi_level": null
         },
         {
           "candidate": {
@@ -758,7 +760,8 @@
           "ri_used": null,
           "purity_score": null,
           "classification_chain": [],
-          "evidence_chain": []
+          "evidence_chain": [],
+          "msi_level": null
         },
         {
           "candidate": {
@@ -849,7 +852,8 @@
           "ri_used": null,
           "purity_score": null,
           "classification_chain": [],
-          "evidence_chain": []
+          "evidence_chain": [],
+          "msi_level": null
         }
       ],
       "top_candidate_name": "isoquercitrin",
@@ -1080,7 +1084,8 @@
             "relation": "pharmacopoeial_markers",
             "strength": 0.3
           }
-        ]
+        ],
+        "msi_level": null
       },
       {
         "candidate": {
@@ -1225,7 +1230,8 @@
             "relation": "pharmacopoeial_markers",
             "strength": 0.3
           }
-        ]
+        ],
+        "msi_level": null
       },
       {
         "candidate": {
@@ -1371,7 +1377,8 @@
             "relation": "pharmacopoeial_markers",
             "strength": 0.3
           }
-        ]
+        ],
+        "msi_level": null
       },
       {
         "candidate": {
@@ -1516,7 +1523,8 @@
             "relation": "pharmacopoeial_markers",
             "strength": 0.3
           }
-        ]
+        ],
+        "msi_level": null
       }
     ]
   }

@@ -78,6 +78,7 @@ export const MOCK_CANDIDATE_RANKS: CandidateRank[] = [
     ranking_convention: "lower_is_better",
     verdict: "CONFIRMED",
     tied_candidates: [],
+    msi_level: null,
     evidence_graph: evidenceForQuercetin,
     gaps: [
       "Unmatched observed peak at m/z 165.0188 — possible methoxy adduct",
@@ -101,6 +102,7 @@ export const MOCK_CANDIDATE_RANKS: CandidateRank[] = [
     ranking_convention: "lower_is_better",
     verdict: "TENTATIVE",
     tied_candidates: ["cand_tie_1"],
+    msi_level: null,
     gaps: [
       "Missing fragment at m/z 121.0284 (Kaempferin marker)",
       "Hydrogen count mismatch on ring B",
@@ -123,6 +125,7 @@ export const MOCK_CANDIDATE_RANKS: CandidateRank[] = [
     ranking_convention: "lower_is_better",
     verdict: "TENTATIVE",
     tied_candidates: ["cand_tie_1"],
+    msi_level: null,
     gaps: ["Methoxy feature at m/z 165.0188 unexplained by other candidates"],
   },
   {
@@ -142,6 +145,7 @@ export const MOCK_CANDIDATE_RANKS: CandidateRank[] = [
     ranking_convention: "lower_is_better",
     verdict: "AMBIGUOUS",
     tied_candidates: [],
+    msi_level: null,
     gaps: ["3 of 6 diagnostic fragments absent", "Cross-modal HSQC pattern inconsistent"],
   },
   {
@@ -161,6 +165,7 @@ export const MOCK_CANDIDATE_RANKS: CandidateRank[] = [
     ranking_convention: "lower_is_better",
     verdict: "CANDIDATE",
     tied_candidates: ["cand_tie_1"],
+    msi_level: null,
     gaps: ["Molecular formula mismatch (O5 vs observed O7)", "Two missing fragments"],
   },
   {
@@ -180,6 +185,7 @@ export const MOCK_CANDIDATE_RANKS: CandidateRank[] = [
     ranking_convention: "lower_is_better",
     verdict: "CANDIDATE",
     tied_candidates: ["cand_tie_1"],
+    msi_level: null,
     gaps: ["Missing 3 of 4 oxygen-bearing fragments", "A-ring substitution pattern incompatible"],
   },
   {
@@ -199,6 +205,7 @@ export const MOCK_CANDIDATE_RANKS: CandidateRank[] = [
     ranking_convention: "lower_is_better",
     verdict: "ABSTAIN",
     tied_candidates: ["cand_tie_1", "cand_tie_2"],
+    msi_level: null,
     gaps: ["Coverage below 0.20 threshold — system declines to rank"],
   },
   {
@@ -218,6 +225,7 @@ export const MOCK_CANDIDATE_RANKS: CandidateRank[] = [
     ranking_convention: "lower_is_better",
     verdict: "NOVELTY_FLAGGED",
     tied_candidates: ["cand_tie_1", "cand_tie_2"],
+    msi_level: null,
     gaps: [
       "No reference compound matches the observed HRMS formula",
       "5 of 6 MS2 fragments are novel — proposed structure is a hypothesis, not an identification",

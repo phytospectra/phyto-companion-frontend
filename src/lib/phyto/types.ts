@@ -72,6 +72,15 @@ export interface CandidateRank {
   verdict: Verdict;
   /** Candidate ids statistically tied with this one (backend: list[str]). */
   tied_candidates: string[];
+  /**
+   * MSI confidence level this rank's evidence supports (ADR-0075, Sumner
+   * et al. 2007): 1 = identified (authentic standard), 2 = putatively
+   * annotated (library spectral match — the ranker baseline), 3 =
+   * putatively characterized class, 4 = unknown.  null when never
+   * attributed.  Set together with level_1_match; rendering is pass-2
+   * (gap audit §3a).
+   */
+  msi_level: number | null;
   evidence_graph?: EvidenceGraph;
   gaps: string[];
 }

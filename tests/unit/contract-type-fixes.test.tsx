@@ -45,6 +45,7 @@ function rank(overrides: Partial<CandidateRank>): CandidateRank {
     ranking_convention: "lower_is_better",
     verdict: "TENTATIVE",
     tied_candidates: [],
+    msi_level: null,
     gaps: [],
     ...overrides,
   };
