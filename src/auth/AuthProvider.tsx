@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import { setToken, clearToken } from "@/api/client";
+import { QueryClientContext } from "@tanstack/react-query";
+import { useTokenStore } from "@/lib/phyto/stores";
 
 export type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 
@@ -49,6 +51,13 @@ function isFirebaseConfigured(): boolean {
 const FIREBASE_CONFIGURED = isFirebaseConfigured();
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const queryClient = React.useContext(QueryClientContext);
+  const accountUid = React.useRef<string | null>(null);
+  const resetAccount = React.useCallback(() => {
+    clearToken();
+    queryClient?.clear();
+    useTokenStore.setState({ balance: null, insufficientTokensError: null, pendingRetryOp: null });
+  }, [queryClient]);
   // Initial state is derived rather than assigned in an effect: that avoids a
   // first-paint flash of the signed-out UI and a needless extra render.
   const [user, setUser] = React.useState<AuthUser | null>(() =>
@@ -83,14 +92,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let unsubscribe: (() => void) | undefined;
 
     void (async () => {
-      const [{ onAuthStateChanged, signOut: fbSignOut }, { auth }] =
+      const [{ onIdTokenChanged, signOut: fbSignOut }, { auth }] =
         await Promise.all([
           import("firebase/auth"),
           import("./firebase"),
         ]);
 
-      unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+      if (!active) return;
+      let generation = 0;
+      unsubscribe = onIdTokenChanged(auth, async (fbUser) => {
         if (!active) return;
+        const current = ++generation;
+        if (accountUid.current !== (fbUser?.uid ?? null)) {
+          resetAccount();
+          accountUid.current = fbUser?.uid ?? null;
+          setUser(null);
+          setIdToken(null);
+          setStatus("loading");
+        }
         if (!fbUser) {
           setUser(null);
           setIdToken(null);
@@ -98,8 +117,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           clearToken();
           return;
         }
-        const token = await fbUser.getIdToken();
-        if (!active) return;
+        let token: string;
+        try {
+          token = await fbUser.getIdToken();
+        } catch {
+          if (!active || current !== generation) return;
+          resetAccount();
+          setUser(null);
+          setIdToken(null);
+          setStatus("unauthenticated");
+          return;
+        }
+        if (!active || current !== generation) return;
         setUser({
           uid: fbUser.uid,
           email: fbUser.email,
@@ -111,15 +140,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(token);
       });
 
-      // Keep the signature reference alive for the unmount path.
       void fbSignOut;
-    })();
+    })().catch(() => {
+      if (!active) return;
+      resetAccount();
+      setUser(null);
+      setIdToken(null);
+      setStatus("unauthenticated");
+    });
 
     return () => {
       active = false;
       unsubscribe?.();
+      resetAccount();
     };
-  }, []);
+  }, [resetAccount]);
 
   const signIn = React.useCallback(async (options: SignInOptions) => {
     if (USE_MOCKS) {
@@ -152,6 +187,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = React.useCallback(async () => {
+    resetAccount();
+    setUser(null);
+    setIdToken(null);
+    setStatus("unauthenticated");
     if (USE_MOCKS) {
       setUser(null);
       setIdToken(null);
@@ -165,7 +204,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       import("./firebase"),
     ]);
     await fbSignOut(auth);
-  }, []);
+  }, [resetAccount]);
 
   const value = React.useMemo<AuthContextValue>(
     () => ({ user, idToken, status, signIn, signOut }),

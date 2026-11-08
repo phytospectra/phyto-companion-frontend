@@ -75,6 +75,8 @@ export function UploadPage({ onRunStarted }: UploadPageProps) {
   }
 
   async function onSubmit(values: UploadFormValues) {
+    // Do not send legacy demo payloads to live science or metering endpoints.
+    if (process.env.NEXT_PUBLIC_USE_MOCKS !== "true") return;
     if (files.length === 0) {
       const message =
         "Add at least one spectra file (.mzML, .mzXML, .mgf, .csv, .jdx or a .zip archive) before starting the analysis.";
@@ -196,7 +198,7 @@ export function UploadPage({ onRunStarted }: UploadPageProps) {
             {showCompoundForm && <CompoundMetadataForm form={form} />}
 
             <div className="flex flex-wrap items-center gap-3">
-              <Button type="submit" disabled={submitting} className="gap-1.5">
+              <Button type="submit" disabled={submitting || process.env.NEXT_PUBLIC_USE_MOCKS !== "true"} className="gap-1.5">
                 {submitting ? "Starting run…" : "Start analysis"}
                 {!submitting && (
                   <Badge

@@ -28,7 +28,19 @@ interface BillingPageProps {
   onTriggerInsufficient: () => void;
 }
 
-export function BillingPage({ onTriggerInsufficient }: BillingPageProps) {
+export function BillingPage(props: BillingPageProps) {
+  if (process.env.NEXT_PUBLIC_USE_MOCKS !== "true") {
+    return (
+      <section role="status" className="space-y-4">
+        <h1 className="text-2xl font-semibold">Billing unavailable</h1>
+        <p>Live balance, transaction history, and checkout are not connected in this frontend. No purchase or token credit can be made here.</p>
+      </section>
+    );
+  }
+  return <DemoBillingPage {...props} />;
+}
+
+function DemoBillingPage({ onTriggerInsufficient }: BillingPageProps) {
   const balance = useTokenStore((s) => s.balance);
   const [transactions, setTransactions] = React.useState<BillingTransaction[]>([]);
   const [loadingTx, setLoadingTx] = React.useState(true);

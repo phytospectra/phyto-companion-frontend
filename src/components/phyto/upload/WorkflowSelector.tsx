@@ -18,13 +18,15 @@ interface WorkflowSelectorProps {
  * backend). The selected card is highlighted and marked `aria-pressed`.
  */
 export function WorkflowSelector({ value, onChange }: WorkflowSelectorProps) {
+  const demo = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
   return (
     <Card className="h-fit lg:sticky lg:top-20">
       <CardHeader>
         <CardTitle className="text-base">Choose a workflow</CardTitle>
         <CardDescription>
-          Each workflow runs a different plan. The estimated total includes
-          every phase.
+          {demo
+            ? "Demo workflows — simulated results and estimated token costs only."
+            : "These workflows are demo-only and unavailable in live mode. The backend supports reference_hsqc_identify, which is not connected to this upload form."}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -34,6 +36,7 @@ export function WorkflowSelector({ value, onChange }: WorkflowSelectorProps) {
             <button
               key={w.id}
               type="button"
+              disabled={!demo}
               onClick={() => onChange(w.id)}
               aria-pressed={active}
               data-testid={`workflow-${w.id}`}

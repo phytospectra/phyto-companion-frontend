@@ -46,7 +46,7 @@ const initialBalance: TokenBalance = {
 };
 
 export const useTokenStore = create<TokenState>((set) => ({
-  balance: initialBalance,
+  balance: process.env.NEXT_PUBLIC_USE_MOCKS === "true" ? initialBalance : null,
   insufficientTokensError: null,
   pendingRetryOp: null,
   setBalance: (b) => set({ balance: b }),
