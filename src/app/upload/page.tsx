@@ -6,6 +6,7 @@ import { UploadPage } from "@/components/phyto/upload/UploadPage";
 import { UploadLanding } from "@/components/phyto/upload/UploadLanding";
 import { LoadingSpinner } from "@/components/phyto/common/LoadingSpinner";
 import { useAuth } from "@/auth/AuthProvider";
+import { ResearchWorkspace } from "@/components/phyto/research/ResearchWorkspace";
 
 /**
  * /upload is the product's front door.
@@ -17,7 +18,7 @@ import { useAuth } from "@/auth/AuthProvider";
  */
 export default function UploadRoute() {
   const router = useRouter();
-  const { status } = useAuth();
+  const { status, user } = useAuth();
 
   if (status === "loading") {
     return (
@@ -33,7 +34,9 @@ export default function UploadRoute() {
 
   return (
     <AppFrame>
-      <UploadPage onRunStarted={(run_id) => router.push(`/analysis/${run_id}`)} />
+      {process.env.NEXT_PUBLIC_USE_MOCKS === "true" ? (
+        <UploadPage onRunStarted={(run_id) => router.push(`/analysis/${run_id}`)} />
+      ) : user ? <ResearchWorkspace key={user.uid} owner={user.uid} /> : null}
     </AppFrame>
   );
 }

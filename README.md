@@ -158,3 +158,26 @@ server-rendered.
 ## License
 
 The software is available under the [Apache License 2.0](LICENSE).
+
+## Real HSQC research workspace (2026-11-09)
+
+Build with `NEXT_PUBLIC_USE_MOCKS=false`, the intended API URL, and all required
+Firebase public configuration fields. Authenticated `/upload` discovers the
+backend's versioned `/capabilities` contract and enables only the real
+`reference_hsqc_identify` workflow. Requires the matching backend capability/run
+response changes. Missing, malformed, mock or unavailable capabilities disable
+submission; there is no demo fallback.
+
+Enter a sample identifier, known neutral formula, and HSQC peak rows. The page
+shows the provisional backend token cost before submission. Results retain
+assessment/limitations and can be downloaded as JSON; review completion is not a
+scientific identification. Run state is currently process-local on the server.
+
+Request deadlines and duplicate conflicts do not trigger automatic mutation
+retries. Unknown outcomes retain the request key for operator reconciliation.
+Account changes discard private component state and obsolete responses. Unsupported
+demo screens are blocked in live mode, including direct URL navigation.
+
+Verification: `npm ci`, `npm run typecheck`, `npm run test:unit`, `npm run build`.
+The GitHub Actions workflow runs these gates on main/agent pushes and PRs. Live
+Firebase/staging acceptance is separate from the offline tests.

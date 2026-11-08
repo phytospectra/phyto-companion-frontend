@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/phyto/layout/AppShell";
 import { InsufficientTokensModal } from "@/components/phyto/common/InsufficientTokensModal";
@@ -48,11 +49,18 @@ export function useSimulateInsufficient(): () => void {
  */
 export function AppFrame({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const available = process.env.NEXT_PUBLIC_USE_MOCKS === "true" ||
+    ["/upload", "/billing", "/account/billing"].includes(pathname ?? "");
 
   return (
     <ProtectedRoute>
       <TooltipProvider delayDuration={200}>
-        <AppShell>{children}</AppShell>
+        <AppShell>{available ? children : <section className="space-y-3">
+          <h1 className="text-2xl font-semibold">Workflow unavailable in research mode</h1>
+          <p>This screen uses demonstration data and is not connected to the real scientific workflow.</p>
+          <Link className="underline" href="/upload">Open the HSQC reference workspace</Link>
+        </section>}</AppShell>
         <InsufficientTokensModal onGoToBilling={() => router.push("/billing")} />
       </TooltipProvider>
     </ProtectedRoute>

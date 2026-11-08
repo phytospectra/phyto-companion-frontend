@@ -113,9 +113,32 @@ export class NetworkError extends ApiError {
 // ---------------------------------------------------------------------------
 
 let idToken: string | null = null;
+let sessionGeneration = 0;
+
+/** Requests from a superseded session must never populate current UI state. */
+export class SessionChangedError extends Error {
+  constructor() { super("Your session changed. Reload the current account's data."); }
+}
+
+export class RequestTimeoutError extends Error {
+  constructor() {
+    super("The request timed out. Its outcome may be unknown; do not submit it again until reconciled.");
+  }
+}
+
+export class IdempotencyConflictError extends ApiError {
+  constructor(body: unknown, url: string) {
+    const detail = body && typeof body === "object" && "detail" in body ? String(body.detail) : "";
+    super(detail.includes("Idempotency-Key")
+      ? "This request key was already used. Check the original operation before submitting again."
+      : "The operation conflicts with the current run state. Refresh the run before trying again.",
+    409, body, url);
+  }
+}
 
 /** Called by AuthProvider on every Firebase auth-state change. */
 export function setToken(token: string | null): void {
+  if (idToken !== token) sessionGeneration += 1;
   idToken = token;
 }
 
@@ -126,7 +149,7 @@ export function getToken(): string | null {
 
 /** Clear the token on sign-out. */
 export function clearToken(): void {
-  idToken = null;
+  setToken(null);
 }
 
 // ---------------------------------------------------------------------------
@@ -215,9 +238,10 @@ function parseInsufficientTokens(
   };
 }
 
-interface RequestOptions {
+export interface RequestOptions {
   idempotencyKey?: string;
   signal?: AbortSignal;
+  timeoutMs?: number;
 }
 
 async function request<T>(
@@ -226,6 +250,8 @@ async function request<T>(
   body?: unknown,
   options: RequestOptions = {}
 ): Promise<T> {
+  const generation = sessionGeneration;
+  const token = idToken;
   // Demo builds: no request may leave before the MSW service worker has
   // claimed the page, or it reaches the real orchestrator and 401s. The
   // check is inlined away entirely in non-mock builds.
@@ -237,68 +263,65 @@ async function request<T>(
     await whenMocksReady();
   }
 
+  if (generation !== sessionGeneration) throw new SessionChangedError();
   const base = resolveBaseUrl();
   const url = `${base}${path.startsWith("/") ? path : `/${path}`}`;
 
   const headers: Record<string, string> = {
     Accept: "application/json",
   };
-  if (idToken) headers.Authorization = `Bearer ${idToken}`;
+  if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) headers["Content-Type"] = "application/json";
   if (method === "POST") {
     headers["Idempotency-Key"] =
       options.idempotencyKey ?? generateIdempotencyKey();
   }
 
-  let response: Response;
+  const controller = new AbortController();
+  let timedOut = false;
+  const abort = () => controller.abort(options.signal?.reason);
+  if (options.signal?.aborted) abort();
+  else options.signal?.addEventListener("abort", abort, { once: true });
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, options.timeoutMs ?? 120_000);
+
   try {
-    response = await fetch(url, {
-      method,
-      headers,
+    const response = await fetch(url, {
+      method, headers,
       body: body === undefined ? undefined : JSON.stringify(body),
-      signal: options.signal,
+      signal: controller.signal,
+      cache: "no-store",
     });
-  } catch (cause) {
-    throw new NetworkError(cause, url);
-  }
-
-  if (response.ok) {
-    if (response.status === 204) return undefined as T;
-    const text = await response.text();
-    if (text === "") return undefined as T;
-    return JSON.parse(text) as T;
-  }
-
-  const errorBody = await readBody(response);
-
-  switch (response.status) {
-    case 401:
-      throw new UnauthorizedError(errorBody, url);
-    case 402:
-      throw new InsufficientTokensError(
-        parseInsufficientTokens(errorBody),
-        url
-      );
-    case 404:
-      throw new NotFoundError(errorBody, url);
-    case 422:
-      throw new ValidationError(
-        parseValidationFields(errorBody),
-        errorBody,
-        url
-      );
-    case 503:
-      throw new ServiceUnavailableError(errorBody, url);
-    default:
-      if (response.status >= 500) {
-        throw new ServerError(response.status, errorBody, url);
+    const responseBody = await readBody(response);
+    if (generation !== sessionGeneration) throw new SessionChangedError();
+    if (response.ok) {
+      if (response.status === 204 || responseBody === null) return undefined as T;
+      if (typeof responseBody === "string") {
+        throw new ApiError("Server returned invalid JSON.", response.status, null, url);
       }
-      throw new ApiError(
-        `Request failed with status ${response.status}.`,
-        response.status,
-        errorBody,
-        url
-      );
+      return responseBody as T;
+    }
+    switch (response.status) {
+      case 401: throw new UnauthorizedError(responseBody, url);
+      case 402: throw new InsufficientTokensError(parseInsufficientTokens(responseBody), url);
+      case 404: throw new NotFoundError(responseBody, url);
+      case 409: throw new IdempotencyConflictError(responseBody, url);
+      case 422: throw new ValidationError(parseValidationFields(responseBody), responseBody, url);
+      case 503: throw new ServiceUnavailableError(responseBody, url);
+      default:
+        if (response.status >= 500) throw new ServerError(response.status, responseBody, url);
+        throw new ApiError(`Request failed with status ${response.status}.`, response.status, responseBody, url);
+    }
+  } catch (cause) {
+    if (generation !== sessionGeneration) throw new SessionChangedError();
+    if (timedOut) throw new RequestTimeoutError();
+    if (cause instanceof ApiError || cause instanceof SessionChangedError) throw cause;
+    throw new NetworkError(cause, url);
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", abort);
   }
 }
 

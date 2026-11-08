@@ -56,6 +56,12 @@ const NAV_ITEMS: NavItem[] = [
   { id: "settings", href: "/settings", label: "Settings", icon: Settings, hint: "LLM provider + model version" },
 ];
 
+function availableNavigation() {
+  return process.env.NEXT_PUBLIC_USE_MOCKS === "true" ? NAV_ITEMS :
+    NAV_ITEMS.filter(item => ["upload", "billing"].includes(item.id)).map(item =>
+      item.id === "upload" ? { ...item, label: "HSQC workspace", hint: "Reference ranking and evidence review" } : item);
+}
+
 /** Derive the active nav id from the current URL path. */
 function activePageFromPath(pathname: string | null): PageId {
   if (!pathname) return "upload";
@@ -237,7 +243,7 @@ function Header({ activePage }: { activePage: PageId }) {
         className="md:hidden flex items-center gap-1 overflow-x-auto border-t px-2 py-1.5"
         aria-label="Primary"
       >
-        {NAV_ITEMS.map((item) => {
+        {availableNavigation().map((item) => {
           const Icon = item.icon;
           const active = activePage === item.id;
           return (
@@ -269,7 +275,7 @@ function Sidebar({ activePage }: { activePage: PageId }) {
       aria-label="Sidebar navigation"
     >
       <nav className="flex-1 px-2 py-4 space-y-0.5">
-        {NAV_ITEMS.map((item) => {
+        {availableNavigation().map((item) => {
           const Icon = item.icon;
           const active = activePage === item.id;
           return (
@@ -314,10 +320,10 @@ function Sidebar({ activePage }: { activePage: PageId }) {
       </nav>
       <div className="border-t p-3">
         <div className="rounded-md bg-muted/40 p-2.5 text-[11px] text-muted-foreground">
-          <div className="font-mono">model: {APP_META.model_version}</div>
-          <div className="mt-0.5">
-            Demo data — swaps for live API at deploy time.
-          </div>
+          {process.env.NEXT_PUBLIC_USE_MOCKS === "true" ? <>
+            <div className="font-mono">Demo: {APP_META.model_version}</div>
+            <div className="mt-0.5">Simulated data; no scientific identification.</div>
+          </> : <div>Research preview. Reference ranking is not independently validated.</div>}
         </div>
       </div>
     </aside>
@@ -333,12 +339,12 @@ function Footer() {
       <div className="px-4 md:px-8 py-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs text-muted-foreground">
         <div>
           <span className="font-semibold text-foreground">{APP_META.name}</span>{" "}
-          v{APP_META.version} · AGPL-3.0 · an honest companion, not an oracle.
+          v{APP_META.version} · Apache-2.0 · an honest companion, not an oracle.
         </div>
         <div className="flex items-center gap-3">
           <Badge variant="outline" className="text-[10px] gap-1">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            mock API online
+            {process.env.NEXT_PUBLIC_USE_MOCKS === "true" ? "Simulated demo" : "Research preview"}
           </Badge>
           <span className="hidden md:inline">
             Every claim carries a verdict badge. Every candidate is one
