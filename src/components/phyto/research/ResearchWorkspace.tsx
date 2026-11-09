@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { researchApi, canRun, parsePeaks, type Capabilities, type ResearchRun } from "@/api/research";
+import { researchApi, canRun, parsePeaks, type Capabilities, type ResearchRun, type RunHistoryRow } from "@/api/research";
 import { ApiError, generateIdempotencyKey } from "@/api/client";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/phyto/layout/PageHeader";
@@ -19,6 +19,7 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
   const [uncertain, setUncertain] = React.useState(false);
   const [reviewed, setReviewed] = React.useState(false);
   const [requestKey, setRequestKey] = React.useState("");
+  const [history, setHistory] = React.useState<RunHistoryRow[]>([]);
   const active = React.useRef(true);
   const operation = React.useRef(false);
   const pendingRun = React.useRef<string | null>(null);
@@ -33,8 +34,19 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
     }).catch(() => {
       if (!controller.signal.aborted) setError("Cannot verify backend capabilities. Analysis is disabled. Reload to check again.");
     });
+    // Owner-scoped durable history; silently absent on backends without it.
+    researchApi.history(controller.signal).then(value => {
+      if (!controller.signal.aborted) setHistory(value);
+    }).catch(() => { /* history is optional; retrieval stays manual */ });
     return () => { active.current = false; controller.abort(); };
   }, []);
+
+  const outcomeLabels: Record<RunHistoryRow["outcome"], string> = {
+    executing: "in progress",
+    completed: "completed",
+    failed: "failed",
+    uncertain: "needs operator reconciliation",
+  };
 
   async function perform(action: () => Promise<void>) {
     if (operation.current) return;
@@ -103,7 +115,9 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
       description="Rank measured references using a known molecular formula and observed HSQC cross-peaks." />
     <section className="rounded-lg border border-amber-400 p-4 space-y-2" aria-label="Readiness and limitations">
       <h2 className="font-semibold">Not scientifically validated · Not production-ready</h2>
-      <p>Rankings and human review do not establish a confirmed identification. Export results before leaving: runs are held in server memory and can disappear on restart.</p>
+      <p>Rankings and human review do not establish a confirmed identification. {capabilities?.run_storage === "sqlite"
+        ? "Runs persist in the backend's durable storage and survive restarts; export evidence to keep an independent copy."
+        : "Export results before leaving: this backend holds runs in server memory and they can disappear on restart."}</p>
       {!capabilities ? <p role="status">Capabilities have not been verified.</p> : <>
         <p>Execution: {capabilities.scientific_execution}. Analysis: {capabilities.analysis_tokens ?? "unavailable"} tokens{capabilities.pricing_provisional ? " (provisional price)" : ""}.</p>
         {!canRun(capabilities) && <p role="status">The connected backend cannot accept this real workflow. No demo fallback is used.</p>}
@@ -128,6 +142,35 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
       <h2 className="text-lg font-semibold">Review a run</h2>
       <label className="block">Run ID<input className={field} value={runId} maxLength={100} disabled={busy} onChange={e => { setRunId(e.target.value); setRun(null); setReviewed(false); }} /></label>
       <Button variant="outline" disabled={busy || !runId.trim()} onClick={() => void perform(() => load(runId.trim()))}>Load or refresh run</Button>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h3 className="font-medium">Your recent runs</h3>
+          <Button variant="outline" disabled={busy} onClick={() => void perform(async () => {
+            setHistory(await researchApi.history(abort.current.signal));
+          })}>Refresh history</Button>
+        </div>
+        {history.length === 0 ? <p role="status" className="text-sm text-muted-foreground">No prior runs are listed for this account. A completed submission appears here.</p> : (
+          <ul className="text-sm divide-y" aria-label="Recent runs list">
+            {history.map(row => (
+              <li key={row.run_id} className="flex flex-wrap items-center gap-2 py-2">
+                <button type="button" className="underline underline-offset-2 disabled:opacity-50" disabled={busy}
+                  aria-label={`Load run ${row.run_id}`}
+                  onClick={() => { setRunId(row.run_id); void perform(() => load(row.run_id)); }}>
+                  {row.run_id}
+                </button>
+                <span>{row.workflow}</span>
+                <span className={row.outcome === "uncertain"
+                  ? "font-semibold text-amber-600 dark:text-amber-400"
+                  : row.outcome === "failed" ? "text-red-600 dark:text-red-400" : "text-muted-foreground"}>
+                  {outcomeLabels[row.outcome]}{row.status === "awaiting_review" && row.outcome === "executing" ? " · review required" : ""}
+                </span>
+                <time className="text-muted-foreground" dateTime={row.updated_at}>{new Date(row.updated_at).toLocaleString()}</time>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="text-sm text-muted-foreground">“Needs operator reconciliation” means the backend could not record a final outcome; ask the operator before resubmitting.</p>
+      </div>
     </section>
     {run && <section className="space-y-4" aria-label="Scientific results">
       <h2 className="text-lg font-semibold">Run {run.run_id}: {run.status}</h2>

@@ -22,6 +22,7 @@ beforeEach(() => {
   vi.spyOn(researchApi, "start").mockResolvedValue({ run_id: run.run_id });
   vi.spyOn(researchApi, "get").mockResolvedValue(run);
   vi.spyOn(researchApi, "approve").mockResolvedValue(undefined);
+  vi.spyOn(researchApi, "history").mockResolvedValue([]);
 });
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 async function enterQuery() {
@@ -104,4 +105,25 @@ it("clears uncertainty only when the original accepted run is recovered", async 
   await screen.findByText(/Run run-private:/);
   await waitFor(() => expect(screen.getByRole("button", { name: "Run reference ranking" })).toBeEnabled());
   expect(researchApi.start).toHaveBeenCalledTimes(1);
+});
+
+it("shows durable history with explicit outcome states and loads a selected run", async () => {
+  vi.mocked(researchApi.history).mockResolvedValue([
+    { run_id: "run-older", workflow: "reference_hsqc_identify", status: "awaiting_review", outcome: "uncertain", updated_at: "2026-11-09T10:00:00Z" },
+    { run_id: "run-private", workflow: "reference_hsqc_identify", status: "complete", outcome: "completed", updated_at: "2026-11-09T11:00:00Z" },
+  ]);
+  render(<ResearchWorkspace owner="alice" />);
+  const row = await screen.findByRole("button", { name: "Load run run-private" });
+  expect(screen.getByText("needs operator reconciliation")).toBeInTheDocument();
+  expect(screen.getByText("completed")).toBeInTheDocument();
+  fireEvent.click(row);
+  await screen.findByText(/Run run-private:/);
+  expect(researchApi.get).toHaveBeenCalledWith("run-private", expect.any(AbortSignal));
+});
+
+it("states durable persistence honestly for sqlite storage", async () => {
+  vi.mocked(researchApi.capabilities).mockResolvedValue({ ...capability, run_storage: "sqlite" });
+  render(<ResearchWorkspace owner="alice" />);
+  await screen.findByText(/survive restarts/);
+  expect(screen.queryByText(/disappear on restart/)).not.toBeInTheDocument();
 });

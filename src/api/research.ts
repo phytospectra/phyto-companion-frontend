@@ -11,7 +11,7 @@ export const capabilitiesSchema = z.object({
   supported_workflows: z.array(z.string()),
   analysis_tokens: z.number().int().nonnegative().nullable(),
   pricing_provisional: z.boolean(),
-  run_storage: z.literal("process_local"),
+  run_storage: z.enum(["memory", "sqlite", "process_local"]),
   production_ready: z.literal(false),
   limitations: z.array(z.string()),
 });
@@ -47,6 +47,14 @@ export const runSchema = z.object({
 }).passthrough();
 export type ResearchRun = z.infer<typeof runSchema>;
 const started = z.object({ run_id: z.string() });
+export const runHistoryRowSchema = z.object({
+  run_id: z.string(),
+  workflow: z.string(),
+  status: z.string(),
+  outcome: z.enum(["executing", "completed", "failed", "uncertain"]),
+  updated_at: z.string(),
+});
+export type RunHistoryRow = z.infer<typeof runHistoryRowSchema>;
 
 export function parsePeaks(text: string) {
   const lines = text.trim().split(/\r?\n/).filter(line => line.trim());
@@ -84,6 +92,10 @@ export const researchApi = {
   },
   async get(id: string, signal?: AbortSignal) {
     return runSchema.parse(await apiClient.get(`/runs/${encodeURIComponent(id)}`, { signal }));
+  },
+  async history(signal?: AbortSignal) {
+    const rows = await apiClient.get("/runs", { signal });
+    return z.array(runHistoryRowSchema).parse(rows);
   },
   async approve(id: string, actor: string, signal?: AbortSignal) {
     await apiClient.post(`/runs/${encodeURIComponent(id)}/approve`, {
