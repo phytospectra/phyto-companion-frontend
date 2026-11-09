@@ -113,6 +113,7 @@ export class NetworkError extends ApiError {
 // ---------------------------------------------------------------------------
 
 let idToken: string | null = null;
+let principalId: string | null = null;
 let sessionGeneration = 0;
 
 /** Requests from a superseded session must never populate current UI state. */
@@ -136,9 +137,23 @@ export class IdempotencyConflictError extends ApiError {
   }
 }
 
-/** Called by AuthProvider on every Firebase auth-state change. */
-export function setToken(token: string | null): void {
-  if (idToken !== token) sessionGeneration += 1;
+/**
+ * Bind a refreshed bearer token to the authenticated principal. Rotation for
+ * the same principal preserves in-flight responses; sign-out/account changes
+ * invalidate them. Legacy callers without a principal conservatively treat
+ * token changes as session changes.
+ */
+export function setToken(token: string | null, principal?: string): void {
+  if (token === null) {
+    clearToken();
+    return;
+  }
+  const nextPrincipal = principal || null;
+  if (idToken === null || principalId !== nextPrincipal ||
+      (nextPrincipal === null && idToken !== token)) {
+    sessionGeneration += 1;
+  }
+  principalId = nextPrincipal;
   idToken = token;
 }
 
@@ -149,7 +164,9 @@ export function getToken(): string | null {
 
 /** Clear the token on sign-out. */
 export function clearToken(): void {
-  setToken(null);
+  sessionGeneration += 1;
+  principalId = null;
+  idToken = null;
 }
 
 // ---------------------------------------------------------------------------

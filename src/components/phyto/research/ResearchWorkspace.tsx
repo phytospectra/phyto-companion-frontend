@@ -21,6 +21,7 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
   const [requestKey, setRequestKey] = React.useState("");
   const active = React.useRef(true);
   const operation = React.useRef(false);
+  const pendingRun = React.useRef<string | null>(null);
   const abort = React.useRef(new AbortController());
 
   React.useEffect(() => {
@@ -49,7 +50,13 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
   }
   async function load(id: string) {
     const value = await researchApi.get(id, abort.current.signal);
-    if (active.current) { setRun(value); setReviewed(false); }
+    if (active.current) {
+      setRun(value); setReviewed(false);
+      if (pendingRun.current === id) {
+        pendingRun.current = null;
+        setUncertain(false);
+      }
+    }
   }
   function start(event: React.FormEvent) {
     event.preventDefault();
@@ -60,6 +67,7 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
       }
       const values = parsePeaks(peaks);
       const key = generateIdempotencyKey();
+      pendingRun.current = null;
       setRequestKey(key); setRun(null); setRunId(""); setReviewed(false);
       // Freeze submission before the request: a timeout may hide a completed run.
       setUncertain(true);
@@ -68,6 +76,7 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
         const created = await researchApi.start(sample.trim(), formula.trim(), values, key, abort.current.signal);
         accepted = true;
         if (!active.current) return;
+        pendingRun.current = created.run_id;
         setRunId(created.run_id);
         await load(created.run_id);
         if (active.current) setUncertain(false);

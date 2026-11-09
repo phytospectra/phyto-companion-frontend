@@ -52,7 +52,11 @@ export function parsePeaks(text: string) {
   const lines = text.trim().split(/\r?\n/).filter(line => line.trim());
   if (!text.trim() || lines.length > 256) throw new Error("Enter between 1 and 256 HSQC peaks.");
   return lines.map((line, index) => {
-    const cells = line.trim().split(/[\s,;]+/);
+    // CSV delimiters must preserve missing cells; collapsing them can silently
+    // move intensity into the carbon coordinate (e.g. "1.2,,100").
+    const cells = /[,;]/.test(line)
+      ? line.split(/[,;]/).map(cell => cell.trim())
+      : line.trim().split(/\s+/);
     if (cells.length < 2 || cells.length > 3 || cells.some(c => c === "")) {
       throw new Error(`Line ${index + 1}: use H ppm, C ppm, and optional intensity.`);
     }

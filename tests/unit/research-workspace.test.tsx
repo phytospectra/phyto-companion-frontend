@@ -82,8 +82,26 @@ it("account-key remount discards private results and cancels outstanding request
   expect(signal?.aborted).toBe(true);
 });
 it("rejects malformed, nonfinite and oversized observations", () => {
-  for (const input of ["", "NaN,3", "1,Infinity", "1,2,-1", "16,2", "1,2,3,4", "1,2\n".repeat(257)]) {
+  for (const input of ["", "NaN,3", "1,Infinity", "1,2,-1", "16,2", "1,2,3,4", "1.2,,100", "1.2; ;100", "1.2,18,,100", "1,2\n".repeat(257)]) {
     expect(() => parsePeaks(input)).toThrow();
   }
   expect(() => capabilitiesSchema.parse({ ...capability, scientific_execution: "future-mode" })).toThrow();
+});
+
+it("clears uncertainty only when the original accepted run is recovered", async () => {
+  vi.mocked(researchApi.get).mockRejectedValueOnce(new Error("Network failed"));
+  render(<ResearchWorkspace owner="alice" />);
+  await enterQuery();
+  fireEvent.click(screen.getByRole("button", { name: "Run reference ranking" }));
+  await screen.findByRole("alert");
+  vi.mocked(researchApi.get).mockResolvedValueOnce({ ...run, run_id: "another-run" });
+  fireEvent.change(screen.getByLabelText("Run ID"), { target: { value: "another-run" } });
+  fireEvent.click(screen.getByRole("button", { name: "Load or refresh run" }));
+  await screen.findByText(/Run another-run:/);
+  expect(screen.getByRole("button", { name: "Run reference ranking" })).toBeDisabled();
+  fireEvent.change(screen.getByLabelText("Run ID"), { target: { value: "run-private" } });
+  fireEvent.click(screen.getByRole("button", { name: "Load or refresh run" }));
+  await screen.findByText(/Run run-private:/);
+  await waitFor(() => expect(screen.getByRole("button", { name: "Run reference ranking" })).toBeEnabled());
+  expect(researchApi.start).toHaveBeenCalledTimes(1);
 });

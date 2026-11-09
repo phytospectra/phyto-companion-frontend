@@ -9,7 +9,7 @@ vi.mock("firebase/auth", () => ({
   signOut: vi.fn(),
 }));
 vi.mock("@/auth/firebase", () => ({ auth: {}, googleProvider: {} }));
-afterEach(() => { cleanup(); vi.unstubAllEnvs(); });
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
 it("refreshes tokens, clears account data and rejects late tokens from the previous user", async () => {
   vi.resetModules();
@@ -17,7 +17,7 @@ it("refreshes tokens, clears account data and rejects late tokens from the previ
   for (const key of ["API_KEY", "AUTH_DOMAIN", "PROJECT_ID", "APP_ID"]) vi.stubEnv(`NEXT_PUBLIC_FIREBASE_${key}`, "test-only");
   const { AuthProvider, useAuth } = await import("@/auth/AuthProvider");
   const { useTokenStore } = await import("@/lib/phyto/stores");
-  const { getToken } = await import("@/api/client");
+  const { getToken, apiClient } = await import("@/api/client");
   function Probe() { const auth = useAuth(); return <div>{auth.user?.uid ?? auth.status}</div>; }
   const client = new QueryClient();
   render(<QueryClientProvider client={client}><AuthProvider><Probe /></AuthProvider></QueryClientProvider>);
@@ -27,6 +27,14 @@ it("refreshes tokens, clears account data and rejects late tokens from the previ
   expect(getToken()).toBe("alice-token");
   client.setQueryData(["run", "private"], { secret: "alice-only" });
   useTokenStore.setState({ balance: { user_id: "alice", balance: 30, last_updated: "now" }, pendingRetryOp: { operation_id: "old", retry: vi.fn() } });
+  let finishRequest!: (response: Response) => void;
+  vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>(resolve => { finishRequest = resolve; })));
+  const pendingRun = apiClient.post('/analysis', {});
+  await act(() => firebase.listener!(user("alice", Promise.resolve("refreshed-alice-token"))));
+  finishRequest(new Response(JSON.stringify({ run_id: "alice-accepted-run" })));
+  await expect(pendingRun).resolves.toEqual({ run_id: "alice-accepted-run" });
+  expect(getToken()).toBe("refreshed-alice-token");
+  expect(client.getQueryData(["run", "private"])).toEqual({ secret: "alice-only" });
   let resolve!: (token: string) => void;
   const late = firebase.listener!(user("alice", new Promise<string>(r => { resolve = r; })));
   await act(() => firebase.listener!(user("bob", Promise.resolve("bob-token"))));

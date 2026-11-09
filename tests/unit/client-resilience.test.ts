@@ -12,6 +12,42 @@ it("discards a response returned after the authenticated session changed", async
   resolve(new Response(JSON.stringify({ secret: "alice-data" })));
   await expect(pending).rejects.toBeInstanceOf(SessionChangedError);
 });
+it("keeps a mutation response through token rotation for the same principal", async () => {
+  vi.stubEnv("NEXT_PUBLIC_USE_MOCKS", "false");
+  let resolve!: (response: Response) => void;
+  const fetch = vi.fn((_url: RequestInfo | URL, _options?: RequestInit) =>
+    new Promise<Response>(r => { resolve = r; }));
+  vi.stubGlobal("fetch", fetch);
+  setToken("alice-before-refresh", "alice");
+  const pending = apiClient.post('/analysis', {}, { idempotencyKey: 'same-account-key' });
+  setToken("alice-after-refresh", "alice");
+  resolve(new Response(JSON.stringify({ run_id: 'accepted-run' })));
+  await expect(pending).resolves.toEqual({ run_id: 'accepted-run' });
+  expect(new Headers(fetch.mock.calls[0][1]?.headers).get('Authorization'))
+    .toBe('Bearer alice-before-refresh');
+  expect(fetch).toHaveBeenCalledTimes(1);
+});
+it("invalidates in-flight responses when the principal changes even if token text matches", async () => {
+  vi.stubEnv("NEXT_PUBLIC_USE_MOCKS", "false");
+  let resolve!: (response: Response) => void;
+  vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>(r => { resolve = r; })));
+  setToken("opaque-token", "alice");
+  const pending = apiClient.get('/runs/private');
+  setToken("opaque-token", "bob");
+  resolve(new Response(JSON.stringify({ secret: 'alice-only' })));
+  await expect(pending).rejects.toBeInstanceOf(SessionChangedError);
+});
+it("invalidates a response after sign-out and re-login as the same principal", async () => {
+  vi.stubEnv("NEXT_PUBLIC_USE_MOCKS", "false");
+  let resolve!: (response: Response) => void;
+  vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>(r => { resolve = r; })));
+  setToken("alice-token", "alice");
+  const pending = apiClient.get('/runs/private');
+  clearToken();
+  setToken("alice-token", "alice");
+  resolve(new Response(JSON.stringify({ secret: 'previous-session' })));
+  await expect(pending).rejects.toBeInstanceOf(SessionChangedError);
+});
 it("bounds a hanging request without replaying a mutation", async () => {
   vi.stubEnv("NEXT_PUBLIC_USE_MOCKS", "false");
   const fetch = vi.fn((_url, options) => new Promise((_resolve, reject) => {

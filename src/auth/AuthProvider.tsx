@@ -75,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // system) is touched here; auth state is already initialised above.
   React.useEffect(() => {
     if (!USE_MOCKS) return;
-    setToken(MOCK_TOKEN);
+    setToken(MOCK_TOKEN, MOCK_USER.uid);
     return () => clearToken();
   }, []);
 
@@ -137,7 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
         setIdToken(token);
         setStatus("authenticated");
-        setToken(token);
+        setToken(token, fbUser.uid);
       });
 
       void fbSignOut;
@@ -161,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(MOCK_USER);
       setIdToken(MOCK_TOKEN);
       setStatus("authenticated");
-      setToken(MOCK_TOKEN);
+      setToken(MOCK_TOKEN, MOCK_USER.uid);
       return;
     }
 
