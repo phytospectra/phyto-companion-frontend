@@ -150,6 +150,11 @@ export function FileDropZone({
             multiple
             accept={ACCEPTED_EXTS.join(",")}
             className="sr-only"
+            // The labelled drop-zone div is the interactive control (click +
+            // Enter/Space); keep the raw input out of the accessibility tree
+            // and tab order so it is not an unnamed focusable control.
+            aria-hidden="true"
+            tabIndex={-1}
             onChange={(e) => {
               addFiles(e.target.files);
               // Allow re-selecting the same file after removal.
