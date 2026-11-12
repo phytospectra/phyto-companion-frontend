@@ -3,7 +3,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ResearchWorkspace } from "@/components/phyto/research/ResearchWorkspace";
 import { researchApi, parsePeaks, capabilitiesSchema, type Capabilities, type ResearchRun } from "@/api/research";
-import { RequestTimeoutError } from "@/api/client";
+import { IdempotencyConflictError, RequestTimeoutError } from "@/api/client";
 
 const capability: Capabilities = {
   schema_version: 1, scientific_execution: "real", scientific_validation: "not_validated",
@@ -13,6 +13,7 @@ const capability: Capabilities = {
 };
 const run: ResearchRun = {
   run_id: "run-private", workflow: "reference_hsqc_identify", status: "awaiting_review",
+  outcome: "awaiting_review",
   scientific_execution: "real", scientific_validation: "not_validated", scientific_results: [],
   provenance_manifest_id: "manifest-test", awaiting_task_id: "review",
   tasks: [{ id: "review", requires_checkpoint: "before_confirmed_claim", status: "pending" }],
@@ -126,4 +127,44 @@ it("states durable persistence honestly for sqlite storage", async () => {
   render(<ResearchWorkspace owner="alice" />);
   await screen.findByText(/survive restarts/);
   expect(screen.queryByText(/disappear on restart/)).not.toBeInTheDocument();
+});
+
+it("renders the new durable outcomes (admitted, awaiting review) in history", async () => {
+  vi.mocked(researchApi.history).mockResolvedValue([
+    { run_id: "run-admitted", workflow: "reference_hsqc_identify", status: "running", outcome: "admitted", updated_at: "2026-11-12T10:00:00Z" },
+    { run_id: "run-review", workflow: "reference_hsqc_identify", status: "awaiting_review", outcome: "awaiting_review", updated_at: "2026-11-12T11:00:00Z" },
+  ]);
+  render(<ResearchWorkspace owner="alice" />);
+  await screen.findByRole("button", { name: "Load run run-admitted" });
+  expect(screen.getByText("admitted — not yet executed")).toBeInTheDocument();
+  expect(screen.getByText(/awaiting review/)).toBeInTheDocument();
+  expect(screen.getByText(/review required/)).toBeInTheDocument();
+});
+
+it("renders a running run with an admitted outcome from the detail view", async () => {
+  vi.mocked(researchApi.get).mockResolvedValue({ ...run, status: "running", outcome: "admitted" });
+  render(<ResearchWorkspace owner="alice" />);
+  fireEvent.change(screen.getByLabelText("Run ID"), { target: { value: "run-running" } });
+  fireEvent.click(screen.getByRole("button", { name: "Load or refresh run" }));
+  await screen.findByText(/Run run-private: running/);
+  expect(screen.getByText(/admitted — not yet executed/)).toBeInTheDocument();
+});
+
+it("adopts the conflicting run id from a structured 409 and stays frozen", async () => {
+  const conflict = new IdempotencyConflictError({
+    detail: {
+      message: "a request with this key is already in flight",
+      run_id: "run-conflicting", outcome: "executing",
+    },
+  }, "/analysis");
+  vi.mocked(researchApi.start).mockRejectedValue(conflict);
+  render(<ResearchWorkspace owner="alice" />);
+  await enterQuery();
+  fireEvent.click(screen.getByRole("button", { name: "Run reference ranking" }));
+  await screen.findByRole("alert");
+  // The form stays frozen (no new key) and the conflicting run is adopted.
+  expect(screen.getByRole("button", { name: "Run reference ranking" })).toBeDisabled();
+  expect(screen.getByLabelText("Run ID")).toHaveValue("run-conflicting");
+  expect(screen.getByText(/Do not submit it again with a new key/)).toBeInTheDocument();
+  expect(researchApi.start).toHaveBeenCalledTimes(1);
 });

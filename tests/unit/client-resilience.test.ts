@@ -65,3 +65,22 @@ it("preserves the caller's idempotency key and exposes conflicts without retry",
   expect(fetch).toHaveBeenCalledTimes(1);
   expect(new Headers(fetch.mock.calls[0][1]?.headers).get('Idempotency-Key')).toBe("request-123456789");
 });
+it("surfaces the structured conflict detail: message, run id, outcome and recovery", async () => {
+  vi.stubEnv("NEXT_PUBLIC_USE_MOCKS", "false");
+  const fetch = vi.fn(async (_url: RequestInfo | URL, _options?: RequestInit) => new Response(JSON.stringify({
+    detail: {
+      message: "the original request's outcome is uncertain; operator reconciliation required before any resubmission",
+      run_id: "run-uncertain-001", outcome: "uncertain",
+      recovery: "an operator must determine whether effects occurred and record the decision; never retry with a new key until then",
+    },
+  }), { status: 409 }));
+  vi.stubGlobal("fetch", fetch);
+  const rejection = await apiClient.post('/analysis', {}, { idempotencyKey: "request-123456789" }).catch((e: unknown) => e);
+  expect(rejection).toBeInstanceOf(IdempotencyConflictError);
+  const conflict = rejection as IdempotencyConflictError;
+  expect(conflict.message).toContain("uncertain");
+  expect(conflict.runId).toBe("run-uncertain-001");
+  expect(conflict.outcome).toBe("uncertain");
+  expect(conflict.recovery).toContain("never retry with a new key");
+  expect(fetch).toHaveBeenCalledTimes(1);
+});

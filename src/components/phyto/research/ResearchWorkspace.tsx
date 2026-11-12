@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { researchApi, canRun, parsePeaks, type Capabilities, type ResearchRun, type RunHistoryRow } from "@/api/research";
-import { ApiError, generateIdempotencyKey } from "@/api/client";
+import { ApiError, IdempotencyConflictError, generateIdempotencyKey } from "@/api/client";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/phyto/layout/PageHeader";
 
@@ -42,7 +42,9 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
   }, []);
 
   const outcomeLabels: Record<RunHistoryRow["outcome"], string> = {
+    admitted: "admitted — not yet executed",
     executing: "in progress",
+    awaiting_review: "awaiting review",
     completed: "completed",
     failed: "failed",
     uncertain: "needs operator reconciliation",
@@ -94,6 +96,13 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
         if (active.current) setUncertain(false);
       } catch (cause) {
         // Only an explicit, pre-handler client refusal permits a fresh request.
+        // A 409 conflict never unfreezes: it may hide an executed run, so the
+        // key is never reused. When the backend names the conflicting run,
+        // adopt it so the user can review it directly.
+        if (cause instanceof IdempotencyConflictError && cause.runId && active.current) {
+          pendingRun.current = cause.runId;
+          setRunId(cause.runId);
+        }
         if (!accepted && cause instanceof ApiError && [400, 401, 402, 403, 422].includes(cause.status) && active.current) {
           setUncertain(false);
         }
@@ -162,7 +171,7 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
                 <span className={row.outcome === "uncertain"
                   ? "font-semibold text-amber-600 dark:text-amber-400"
                   : row.outcome === "failed" ? "text-red-600 dark:text-red-400" : "text-muted-foreground"}>
-                  {outcomeLabels[row.outcome]}{row.status === "awaiting_review" && row.outcome === "executing" ? " · review required" : ""}
+                  {outcomeLabels[row.outcome]}{row.status === "awaiting_review" && (row.outcome === "awaiting_review" || row.outcome === "executing") ? " · review required" : ""}
                 </span>
                 <time className="text-muted-foreground" dateTime={row.updated_at}>{new Date(row.updated_at).toLocaleString()}</time>
               </li>
@@ -174,6 +183,9 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
     </section>
     {run && <section className="space-y-4" aria-label="Scientific results">
       <h2 className="text-lg font-semibold">Run {run.run_id}: {run.status}</h2>
+      <p className={run.outcome === "uncertain" ? "font-semibold text-amber-600 dark:text-amber-400" : ""} role="status">
+        Outcome: {outcomeLabels[run.outcome]}{run.outcome === "uncertain" ? " — do not resubmit; ask the operator to reconcile this run." : ""}
+      </p>
       <p>Execution: {run.scientific_execution} · Validation: {run.scientific_validation}</p>
       <p className="break-all">Provenance: {run.provenance_manifest_id}</p>
       {run.tasks.filter(task => task.error).map(task => <p role="alert" key={task.id}>{task.id}: {task.error}</p>)}

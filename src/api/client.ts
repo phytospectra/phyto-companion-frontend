@@ -128,12 +128,28 @@ export class RequestTimeoutError extends Error {
 }
 
 export class IdempotencyConflictError extends ApiError {
+  /** The conflicting run id from a structured backend detail, when present. */
+  readonly runId: string | null;
+  /** The durable outcome of the conflicting run (admitted/executing/uncertain/…). */
+  readonly outcome: string | null;
+  /** Backend recovery guidance, when present. */
+  readonly recovery: string | null;
   constructor(body: unknown, url: string) {
-    const detail = body && typeof body === "object" && "detail" in body ? String(body.detail) : "";
-    super(detail.includes("Idempotency-Key")
-      ? "This request key was already used. Check the original operation before submitting again."
-      : "The operation conflicts with the current run state. Refresh the run before trying again.",
-    409, body, url);
+    const detail = body && typeof body === "object" && "detail" in body
+      ? (body as Record<string, unknown>).detail
+      : null;
+    const structured = detail && typeof detail === "object"
+      ? (detail as Record<string, unknown>)
+      : null;
+    const message = structured && typeof structured.message === "string"
+      ? structured.message
+      : typeof detail === "string" && detail.includes("Idempotency-Key")
+        ? "This request key was already used. Check the original operation before submitting again."
+        : "The operation conflicts with the current run state. Refresh the run before trying again.";
+    super(message, 409, body, url);
+    this.runId = structured && typeof structured.run_id === "string" ? structured.run_id : null;
+    this.outcome = structured && typeof structured.outcome === "string" ? structured.outcome : null;
+    this.recovery = structured && typeof structured.recovery === "string" ? structured.recovery : null;
   }
 }
 

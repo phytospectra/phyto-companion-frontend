@@ -34,7 +34,8 @@ const output = z.object({
 const result = z.object({ task_id: z.string(), tool: z.literal("reference_hsqc.rank"), output });
 export const runSchema = z.object({
   run_id: z.string(), workflow: z.string(),
-  status: z.enum(["complete", "failed", "awaiting_review"]),
+  status: z.enum(["running", "complete", "failed", "awaiting_review"]),
+  outcome: z.enum(["admitted", "executing", "awaiting_review", "completed", "failed", "uncertain"]),
   scientific_execution: z.enum(["mock", "real"]),
   scientific_validation: z.literal("not_validated"),
   scientific_results: z.array(result),
@@ -51,7 +52,7 @@ export const runHistoryRowSchema = z.object({
   run_id: z.string(),
   workflow: z.string(),
   status: z.string(),
-  outcome: z.enum(["executing", "completed", "failed", "uncertain"]),
+  outcome: z.enum(["admitted", "executing", "awaiting_review", "completed", "failed", "uncertain"]),
   updated_at: z.string(),
 });
 export type RunHistoryRow = z.infer<typeof runHistoryRowSchema>;
