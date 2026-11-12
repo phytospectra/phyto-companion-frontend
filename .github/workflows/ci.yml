@@ -25,11 +25,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:unit
       - run: npm run build
-      # Advisory only: 17 transitive findings (prismjs via @mdxeditor/editor /
-      # react-syntax-highlighter; sharp's bundled libvips via Next's image
-      # pipeline) have no non-breaking fix at the pinned majors. Logged here
-      # so new HIGH findings stay visible; see docs/UI-ACCEPTANCE-2026-11-12.md
-      # and the completion ledger.
-      - name: Dependency advisory (npm audit, non-blocking)
-        continue-on-error: true
-        run: npm audit --audit-level=high
+      # Fails on critical findings and on high findings outside the accepted,
+      # documented baseline (docs/DEPENDENCY-SECURITY-2026-11-12.md).
+      - name: Dependency security gate (npm audit baseline)
+        run: node scripts/npm-audit-gate.mjs

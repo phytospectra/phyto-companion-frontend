@@ -168,3 +168,17 @@ it("adopts the conflicting run id from a structured 409 and stays frozen", async
   expect(screen.getByText(/Do not submit it again with a new key/)).toBeInTheDocument();
   expect(researchApi.start).toHaveBeenCalledTimes(1);
 });
+
+it("recovers once from the mount-time auth race without user action", async () => {
+  vi.mocked(researchApi.capabilities)
+    .mockRejectedValueOnce(new Error("Bearer race"))
+    .mockResolvedValueOnce(capability);
+  render(<ResearchWorkspace owner="alice" />);
+  // The single bounded retry (500 ms) enables the workspace without the
+  // error banner or any user action.
+  await waitFor(() => expect(
+    screen.getByRole("button", { name: "Run reference ranking" })
+  ).toBeEnabled(), { timeout: 3000 });
+  expect(screen.queryByText(/Cannot verify backend capabilities/)).not.toBeInTheDocument();
+  expect(researchApi.capabilities).toHaveBeenCalledTimes(2);
+});

@@ -60,3 +60,36 @@ browser after rebuild: zero unnamed controls.
   contract suite.
 - Playwright e2e is not run in CI and was not run locally (browsers not
   provisioned); this record is the browser evidence.
+
+## 2026-11-12 round 2 — integrated live-workspace verification (offline auth)
+
+The live ResearchWorkspace was exercised in a real browser against the real
+authenticated backend **without Firebase staging**, via a build-gated offline
+demo identity in `AuthProvider` (`NEXT_PUBLIC_RESEARCH_DEMO=true`; the mock
+verifier's `mock:<uid>` token flows through the exact production module
+graph). The earlier separate demo-route approach was removed: per-route
+client bundling duplicated the api-client module and silently dropped the
+bearer token — the production AuthProvider path carries it correctly.
+
+Verified in the browser (screenshots: `backend docs/evidence/2026-11-12/`):
+
+1. `/upload` loads capabilities through the real middleware and enables the
+   workspace (no alerts).
+2. Submit a reference-ranking query → durable `Outcome: awaiting review`
+   rendered in the detail view and "awaiting review · review required" in
+   the owner-scoped history.
+3. Backend SIGKILL → restart → "Refresh history" reloads the durable history
+   and "Load or refresh run" re-hydrates the run — **recovery through the
+   real UI**, no loss.
+4. Review checkbox + "Record review and complete checkpoint" → `Outcome:
+   completed`; the durable store shows the run completed with no admitted
+   approvals left open.
+
+Product fix found by this pass: the workspace's mount-time capabilities
+request races the parent AuthProvider's token effect; one bounded 500 ms
+retry (never a loop) now covers it, with a regression test
+(`recovers once from the mount-time auth race without user action`).
+
+Account-isolation in the browser remains component-tested only (single
+offline principal available); live multi-identity checks still need the
+staging Firebase project.

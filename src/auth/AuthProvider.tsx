@@ -37,7 +37,27 @@ const MOCK_USER: AuthUser = {
 };
 const MOCK_TOKEN = "mock-id-token-mock-user-001";
 
+/**
+ * Offline research-demo identity (build-gated): seeds an authenticated
+ * principal WITHOUT Firebase so the live workspace can be exercised in a
+ * browser against a dry-run backend (whose mock verifier accepts
+ * "mock:<uid>" tokens). Identical plumbing to mock mode so the token flows
+ * through the exact production module graph. Never set in production builds.
+ */
+const DEMO_USER: AuthUser = {
+  uid: "alice",
+  email: "alice@demo.local",
+  displayName: "Demo Alice",
+  photoURL: null,
+};
+const DEMO_TOKEN = "mock:alice";
+
 const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
+const RESEARCH_DEMO = process.env.NEXT_PUBLIC_RESEARCH_DEMO === "true";
+// Offline identity: either the mock plane or the research-demo build.
+const OFFLINE_IDENTITY = USE_MOCKS || RESEARCH_DEMO;
+const OFFLINE_USER = USE_MOCKS ? MOCK_USER : DEMO_USER;
+const OFFLINE_TOKEN = USE_MOCKS ? MOCK_TOKEN : DEMO_TOKEN;
 
 function isFirebaseConfigured(): boolean {
   return Boolean(
@@ -61,27 +81,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Initial state is derived rather than assigned in an effect: that avoids a
   // first-paint flash of the signed-out UI and a needless extra render.
   const [user, setUser] = React.useState<AuthUser | null>(() =>
-    USE_MOCKS ? MOCK_USER : null
+    OFFLINE_IDENTITY ? OFFLINE_USER : null
   );
   const [idToken, setIdToken] = React.useState<string | null>(() =>
-    USE_MOCKS ? MOCK_TOKEN : null
+    OFFLINE_IDENTITY ? OFFLINE_TOKEN : null
   );
   const [status, setStatus] = React.useState<AuthStatus>(() => {
-    if (USE_MOCKS) return "authenticated";
+    if (OFFLINE_IDENTITY) return "authenticated";
     return FIREBASE_CONFIGURED ? "loading" : "unauthenticated";
   });
 
-  // Mock mode: no Firebase, no network. Only the API client (an external
-  // system) is touched here; auth state is already initialised above.
+  // Offline identity (mock mode or research-demo): no Firebase, no network.
+  // Only the API client (an external system) is touched here; auth state is
+  // already initialised above.
   React.useEffect(() => {
-    if (!USE_MOCKS) return;
-    setToken(MOCK_TOKEN, MOCK_USER.uid);
+    if (!OFFLINE_IDENTITY) return;
+    setToken(OFFLINE_TOKEN, OFFLINE_USER.uid);
     return () => clearToken();
   }, []);
 
   // Real mode: subscribe to Firebase auth state.
   React.useEffect(() => {
-    if (USE_MOCKS) return;
+    if (OFFLINE_IDENTITY) return;
 
     if (!FIREBASE_CONFIGURED) {
       clearToken();
@@ -157,11 +178,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [resetAccount]);
 
   const signIn = React.useCallback(async (options: SignInOptions) => {
-    if (USE_MOCKS) {
-      setUser(MOCK_USER);
-      setIdToken(MOCK_TOKEN);
+    if (OFFLINE_IDENTITY) {
+      setUser(OFFLINE_USER);
+      setIdToken(OFFLINE_TOKEN);
       setStatus("authenticated");
-      setToken(MOCK_TOKEN, MOCK_USER.uid);
+      setToken(OFFLINE_TOKEN, OFFLINE_USER.uid);
       return;
     }
 
@@ -191,7 +212,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setIdToken(null);
     setStatus("unauthenticated");
-    if (USE_MOCKS) {
+    if (OFFLINE_IDENTITY) {
       setUser(null);
       setIdToken(null);
       setStatus("unauthenticated");

@@ -29,15 +29,38 @@ export function ResearchWorkspace({ owner }: { owner: string }) {
     active.current = true;
     const controller = new AbortController();
     abort.current = controller;
-    researchApi.capabilities(controller.signal).then(value => {
-      if (!controller.signal.aborted) setCapabilities(value);
-    }).catch(() => {
-      if (!controller.signal.aborted) setError("Cannot verify backend capabilities. Analysis is disabled. Reload to check again.");
-    });
-    // Owner-scoped durable history; silently absent on backends without it.
-    researchApi.history(controller.signal).then(value => {
-      if (!controller.signal.aborted) setHistory(value);
-    }).catch(() => { /* history is optional; retrieval stays manual */ });
+    let capabilityAttempts = 0;
+    const loadCapabilities = () => {
+      researchApi.capabilities(controller.signal).then(value => {
+        if (!controller.signal.aborted) setCapabilities(value);
+      }).catch(() => {
+        if (controller.signal.aborted || !active.current) return;
+        capabilityAttempts += 1;
+        if (capabilityAttempts === 1) {
+          // One bounded retry covers the mount-time race where the identity
+          // provider binds the bearer token in its parent effect AFTER this
+          // component's first request. Never an automatic retry loop.
+          window.setTimeout(loadCapabilities, 500);
+          return;
+        }
+        setError("Cannot verify backend capabilities. Analysis is disabled. Reload to check again.");
+      });
+    };
+    let historyAttempts = 0;
+    const loadHistory = () => {
+      // Owner-scoped durable history; silently absent on backends without it.
+      researchApi.history(controller.signal).then(value => {
+        if (!controller.signal.aborted) setHistory(value);
+      }).catch(() => {
+        if (controller.signal.aborted || !active.current) return;
+        historyAttempts += 1;
+        if (historyAttempts === 1) {
+          window.setTimeout(loadHistory, 500);
+        }
+      });
+    };
+    loadCapabilities();
+    loadHistory();
     return () => { active.current = false; controller.abort(); };
   }, []);
 
